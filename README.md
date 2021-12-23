@@ -51,6 +51,18 @@ You will be able to access following pages, after launching you [development env
     ├── var/
     └── vendor/
 
+Create database (see specificities of doctrine in this development environment [here](#use-doctrine)).
+
+```bash
+php bin/console doctrine:database:create
+```
+
+Migrate migrations to database.
+
+```bash
+php bin/console doctrine:migrations:migrate
+```
+
 * * *
 
 ## Development environment
