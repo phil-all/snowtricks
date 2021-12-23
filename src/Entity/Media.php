@@ -22,6 +22,22 @@ class Media
      */
     private $file;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="media")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $type;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="media")
+     */
+    private $trick;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="media")
+     */
+    private $user;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -35,6 +51,42 @@ class Media
     public function setFile(string $file): self
     {
         $this->file = $file;
+
+        return $this;
+    }
+
+    public function getType(): ?Type
+    {
+        return $this->type;
+    }
+
+    public function setType(?Type $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getTrick(): ?Trick
+    {
+        return $this->trick;
+    }
+
+    public function setTrick(?Trick $trick): self
+    {
+        $this->trick = $trick;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
