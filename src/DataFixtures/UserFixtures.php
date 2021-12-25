@@ -22,11 +22,10 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
     {
         $faker = Factory::create('fr_FR');
 
-        for ($i = 2; $i < 26; $i++) {
-            $valid_i = 0;
-            $nonValid_i = 0;
-            $user = new User();
+        $countValid = 1;
 
+        for ($i = 2; $i < 26; $i++) {
+            $user = new User();
             $randomStatus = rand(1, 3);
 
             $user->setRoles(['ROLE_USER'])
@@ -39,7 +38,10 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
             $manager->persist($user);
 
-            $this->addReference('user_' . $i, $user);
+            if ($randomStatus === 2) {
+                $countValid++;
+                $this->addReference('user_' . $countValid, $user);
+            }
         }
 
         $manager->flush();
