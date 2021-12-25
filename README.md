@@ -73,15 +73,18 @@ Load fixtures.
 php bin/console doctrine:fixtures:load
 ```
 
-If you decide to reload with modifications, use the truncate in the purge option.
+If you decide to reload with modifications, use truncate in the purge option.
 
 ```bash
 php bin/console doctrine:fixtures:load --purge-with-truncate
 ```
 
-If purge option don't work due to foreign keys, execute following SQL command:
+Due to foreign keys, truncate option may not work.
+In this case, execute following SQL commands to do the same:
 
 ```SQL
+DELETE FROM comment;
+ALTER TABLE comment AUTO_INCREMENT = 1;
 DELETE FROM trick;
 ALTER TABLE trick AUTO_INCREMENT = 1;
 DELETE FROM user;
