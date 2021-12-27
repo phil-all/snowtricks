@@ -80,7 +80,13 @@ php bin/console doctrine:fixtures:load --purge-with-truncate
 ```
 
 Due to foreign keys, truncate option may not work.
-In this case, execute following SQL commands to do the same:
+In this case:
+
+```bash
+php bin/console doctrine:schema:drop --force && php bin/console doctrine:schema:update --force && php bin/console doctrine:fixtures:load-n
+```
+
+It's eaqual to following sql commands:
 
 ```SQL
 DELETE FROM comment;
@@ -95,6 +101,8 @@ DELETE FROM type;
 ALTER TABLE type AUTO_INCREMENT = 1;
 DELETE FROM status;
 ALTER TABLE status AUTO_INCREMENT = 1;
+DELETE FROM gender;
+ALTER TABLE gender AUTO_INCREMENT = 1;
 ```
 
 * * *
