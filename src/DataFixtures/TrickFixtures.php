@@ -17,15 +17,17 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
         $slugger = new AsciiSlugger();
         $trickNumber = 0;
 
-        for ($i = 1; $i <= $this->validUserCount(); $i++) {
-            $user = $this->getReference('user_' . $i);
+        for ($i = 1; $i <= $this->getCount('validUser'); $i++) {
+            $user = $this->getReference('validUser_' . $i);
 
-            if (rand(0, 1)) {
-                for ($j = 1; $j <= rand(1, 3); $j++) {
+            $trickCount = rand(0, 4);
+
+            if ($trickCount > 0) {
+                for ($j = 1; $j <= $trickCount; $j++) {
                     $trick = new Trick();
-                    $title = $faker->words(rand(1, 3), true);
+                    $title = $faker->words(rand(1, 2), true);
                     $creation = $faker->dateTimeBetween('-' . rand(10, 30) . ' day');
-                    $randomCategory = rand(1, 3);
+                    $randomCategory = rand(1, 5);
                     $trickNumber++;
 
                     $trick->setTitle($title)
@@ -54,15 +56,17 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
     }
 
     /**
-     * Get valid user count
+     * Get count of a reference fixture
+     *
+     * @param string $subject subject name of reference
      *
      * @return integer
      */
-    protected function validUserCount(): int
+    protected function getCount(string $subject): int
     {
         $count = 0;
 
-        while ($this->hasReference('user_' . $count + 1)) {
+        while ($this->hasReference($subject . '_' . $count + 1)) {
             $count++;
         }
 

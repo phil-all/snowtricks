@@ -19,14 +19,11 @@ class OwnerFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
-        // create owner status
-        $status = $this->getReference('status_2');
-
-        // create Owner
         $user = new User();
 
         $user->setRoles(['ROLE_ADMIN'])
-            ->setStatus($status)
+            ->setStatus($this->getReference('status_2'))
+            ->setGender($this->getReference('gender_male'))
             ->setFirstName('Jimmy')
             ->setLastName('Sweat')
             ->setEmail('jimmy.sweat@fake.com')
@@ -35,7 +32,8 @@ class OwnerFixtures extends Fixture implements DependentFixtureInterface
 
         $manager->persist($user);
 
-        $this->addReference('user_1', $user);
+        $this->addReference('validUser_1', $user);
+        $this->addReference('nonPendingUser_1', $user);
 
         $manager->flush();
     }
@@ -45,7 +43,8 @@ class OwnerFixtures extends Fixture implements DependentFixtureInterface
         return [
             StatusFixtures::class,
             CategoryFixtures::class,
-            TypeFixtures::class
+            TypeFixtures::class,
+            GenderFixtures::class
         ];
     }
 }

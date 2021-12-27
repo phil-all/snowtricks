@@ -12,9 +12,11 @@ class CategoryFixtures extends Fixture
     {
         // create 3 categories : grab / rotations / flip
         $categories = [
-            1 => 'grab',
+            1 => 'grabs',
             2 => 'rotations',
-            3 => 'flip'
+            3 => 'flips',
+            4 => 'slides',
+            5 => 'old-school'
         ];
 
         foreach ($categories as $key => $value) {

@@ -10,19 +10,14 @@ class TypeFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // create types : avatar / image / video
-        $types = [
-            1 => 'avatar',
-            2 => 'image',
-            3 => 'video'
-        ];
+        $types = ['avatar', 'image', 'video'];
 
-        foreach ($types as $key => $value) {
+        foreach ($types as $value) {
             $type = new Type();
             $type->setType($value);
             $manager->persist($type);
 
-            $this->addReference('type_' . $key, $type);
+            $this->addReference('type_' . $value, $type);
         }
 
         $manager->flush();

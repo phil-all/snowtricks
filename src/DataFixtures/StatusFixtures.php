@@ -10,7 +10,6 @@ class StatusFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // create status : pending / active / suspended
         $statusList = [
             1 => 'pending',
             2 => 'active',
