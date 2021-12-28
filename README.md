@@ -28,7 +28,7 @@ composer install
 
 `snowtricks` folder will be your symfony working directory.
 
-You will be able to access following pages, after launching you [development environment](#development-environment):
+You will be able to access following pages, after launching your [development environment](#development-environment):
 
 | Page              | Address        |
 | :---------------- | :------------- |
@@ -36,7 +36,7 @@ You will be able to access following pages, after launching you [development env
 | symfony home page | 127.0.0.1:8741 |
 | mailDev inbox     | 127.0.0.1:8081 |
 
-**Here's the project directory structure:**
+## Directory structure
 
     snowtricks/
     ├── bin/
@@ -51,6 +51,8 @@ You will be able to access following pages, after launching you [development env
     ├── var/
     └── vendor/
 
+### Database
+
 Create database (see specificities of doctrine in this development environment [here](#use-doctrine)).
 
 ```bash
@@ -61,6 +63,22 @@ Migrate migrations to database.
 
 ```bash
 php bin/console doctrine:migrations:migrate
+```
+
+### Fixtures
+
+Load fixtures.
+
+```bash
+php bin/console doctrine:fixtures:load
+```
+
+If you decide to reload with database or fixtures modifications:
+
+```bash
+php bin/console doctrine:schema:drop --force 
+&& php bin/console doctrine:schema:update --force 
+&& php bin/console doctrine:fixtures:load -n
 ```
 
 * * *

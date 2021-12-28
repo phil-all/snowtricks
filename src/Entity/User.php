@@ -73,6 +73,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $media;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Gender::class, inversedBy="users")
+     */
+    private $gender;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -303,6 +308,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $medium->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getGender(): ?Gender
+    {
+        return $this->gender;
+    }
+
+    public function setGender(?Gender $gender): self
+    {
+        $this->gender = $gender;
 
         return $this;
     }
