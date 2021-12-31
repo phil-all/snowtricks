@@ -39,15 +39,18 @@ You will be able to access following pages, after launching your [development en
 ## Directory structure
 
     snowtricks/
+    ├── assets/
     ├── bin/
     ├── config/
     ├── docker/ (development environment)
     ├── migrations/
+    ├── node_module/
     ├── public/
     ├── src/
     ├── templates/
     ├── tests/
     ├── translations/
+    ├── uml/
     ├── var/
     └── vendor/
 
