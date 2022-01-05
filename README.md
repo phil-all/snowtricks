@@ -24,6 +24,8 @@ cd snowtricks
 git clone ...
 
 composer install
+
+npm run build
 ```
 
 `snowtricks` folder will be your symfony working directory.
@@ -76,12 +78,16 @@ Load fixtures.
 php bin/console doctrine:fixtures:load
 ```
 
-If you decide to reload with database or fixtures modifications:
+If you decide to reload with database or fixtures modifications, before fixture loading, drop database
 
 ```bash
-php bin/console doctrine:schema:drop --force 
-&& php bin/console doctrine:schema:update --force 
-&& php bin/console doctrine:fixtures:load -n
+php bin/console doctrine:schema:drop --force
+```
+
+And then, update database schema
+
+```bash
+php bin/console doctrine:schema:update --force
 ```
 
 * * *
