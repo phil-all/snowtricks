@@ -13,10 +13,6 @@ class MediaFixtures extends TrickFixtures implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        $faker = \Faker\Factory::create();
-        $faker->addProvider(new \Faker\Provider\Youtube($faker));
-
-
         // user avatar
         for ($l = 1; $l <= $this->getCount('nonPendingUser'); $l++) {
             $media = new Media();
