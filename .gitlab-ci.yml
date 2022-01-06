@@ -1,0 +1,35 @@
+image: jakzal/phpqa:php8.0
+
+before_script:
+    - composer install
+
+cache:
+    paths:
+        - vendor/
+
+stages:
+    - PHP
+
+phpcs:
+    stage: PHP
+    script:
+        - phpcs -v --standard=PSR12 ./src
+    allow_failure: false
+
+phpstan:
+    stage: PHP
+    script:
+        - phpstan analyse -l 3 ./src
+    allow_failure: false
+
+phplint:
+    stage: PHP
+    script:
+        - phplint ./ --exclude=vendor
+    allow_failure: false
+
+parallel-lint:
+    stage: PHP
+    script:
+        - parallel-lint --exclude .git --exclude vendor .
+    allow_failure: false

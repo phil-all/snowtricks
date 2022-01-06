@@ -1,7 +1,4 @@
 {
-    "aalaap/faker-youtube": {
-        "version": "2.0.3"
-    },
     "composer/package-versions-deprecated": {
         "version": "1.11.99.4"
     },
@@ -118,8 +115,14 @@
     "myclabs/deep-copy": {
         "version": "1.10.2"
     },
+    "n98/junit-xml": {
+        "version": "1.1.0"
+    },
     "nikic/php-parser": {
         "version": "v4.13.2"
+    },
+    "overtrue/phplint": {
+        "version": "4.1.0"
     },
     "phar-io/manifest": {
         "version": "2.0.3"
