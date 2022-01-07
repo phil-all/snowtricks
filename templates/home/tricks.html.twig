@@ -24,7 +24,7 @@
 							</a>
 						</div>
 					</div>
-					<a href="#">.../trick/{{ trick.id }}-{{ trick.slug }}</a>
+					<a href="{{ path('home') }}trick/{{ trick.id }}/{{ trick.slug }}">{{ path('single_trick', {"id": trick.id, "slug": trick.slug }) }}</a>
 				</div>
 			</div>
 		{% endfor %}

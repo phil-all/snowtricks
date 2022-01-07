@@ -1,0 +1,81 @@
+<section class="pb-5 container">
+	<hr>
+	<div class="mx-5 py-2">
+		<div class="m-3 p-3 text-center">
+			N'attendez pas,
+			<a href="#">inscrivez-vous</a>
+			pour pouvoir laisser un commentaire...
+		</div>
+		<form class="m-3 p-3">
+			<div class="d-flex flex-column">
+				<div class="d-flex">
+					<div class="bg-secondary text-white rounded-pill text-center" style="width: 52px; height: 42px;">you</div>
+					<div class=" mx-2 w-100">
+						<textarea class="form-control bg-light border-0" id="exampleFormControlTextarea1" rows="1" placeholder="écrivez un commentaire..."></textarea>
+
+					</div>
+					<div class="my-auto">
+						<button type="submit" class="btn btn-secondary my-auto">validez</button>
+					</div>
+				</div>
+
+			</div>
+		</form>
+	</div>
+	<hr>
+	<div class="mx-5 py-3">
+		{% for comment in trick.comments|sortBy('createdAt', 'desc') %}
+			<div class="m-3 p-3 content">
+				<div class="d-flex flex-column">
+					<div class="d-flex">
+						<img src="{{ comment.user.media.values.0.file }}" class="rounded-circle pt-1" alt="avatar" width="42" height="42">
+						<div class=" mx-2 w-100 bg-light rounded">
+							<div class="d-flex">
+								<div class="px-2 fw-bold">
+									{{ comment.user.firstName }}
+									{{ comment.user.lastName }}
+								</div>
+								<div class="px-2">-</div>
+								<div class="px-2 fw-bold text-secondary">
+									{{ comment.createdAt|date('l, d F Y') }}
+								</div>
+							</div>
+							<div class="px-2 text-secondary">
+								@trick:
+								{{ trick.title }}
+							</div>
+							<div class="p-3">{{ comment.content }}</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+	{% if trick.comments|length > 4 %}
+		<div class="d-flex justify-content-around">
+			<a href="#" id="loadMore">
+				<button class="btn btn-secondary" type="button" disabled>
+					<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+					commentaires suivants...
+				</button>
+			</a>
+		</div>
+	{% endif %}
+</section>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script>
+	$(document).ready(function () {
+$(".content").slice(0, 4).show();
+$("#loadMore").on("click", function (e) {
+e.preventDefault();
+$(".content:hidden").slice(0, 4).slideDown();
+if ($(".content:hidden").length == 0) {
+$("#loadMore").text("");
+}
+});
+})
+</script>

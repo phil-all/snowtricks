@@ -3,10 +3,12 @@
 namespace App\DataFixtures;
 
 use App\Entity\Trick;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Faker\Factory;
+use Faker\Generator;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class TrickFixtures extends Fixture implements DependentFixtureInterface
@@ -20,21 +22,22 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
         for ($i = 1; $i <= $this->getCount('validUser'); $i++) {
             $user = $this->getReference('validUser_' . $i);
 
-            $trickCount = rand(0, 4);
+            $trickCount = rand(0, 5);
 
             if ($trickCount > 0) {
                 for ($j = 1; $j <= $trickCount; $j++) {
                     $trick = new Trick();
                     $title = $faker->words(rand(1, 2), true);
-                    $creation = $faker->dateTimeBetween('-' . rand(10, 30) . ' day');
+                    $create = $this->randomDate(10, 30, $faker);
+                    $update = (rand(0, 1)) ? $this->randomDate(10, 30, $faker) : $create;
                     $randomCategory = rand(1, 5);
                     $trickNumber++;
 
                     $trick->setTitle($title)
                         ->setSlug($slugger->slug($title, '-'))
                         ->setContent($faker->text(rand(350, 700)))
-                        ->setCreatedAt(\DateTimeImmutable::createFromMutable($creation))
-                        ->setUpdateAt(\DateTimeImmutable::createFromMutable($creation))
+                        ->setCreatedAt(\DateTimeImmutable::createFromMutable($create))
+                        ->setUpdateAt(\DateTimeImmutable::createFromMutable($update))
                         ->setUser($user)
                         ->setCategory($this->getReference('category_' . $randomCategory));
 
@@ -71,5 +74,19 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
         }
 
         return $count;
+    }
+
+    /**
+     * Returns a random date between a min and max gap arguments
+     *
+     * @param integer $min minimum gap
+     * @param integer $max maximum gap
+     * @param Generator $faker
+     *
+     * @return DateTime
+     */
+    private function randomDate(int $min, int $max, Generator $faker): DateTime
+    {
+        return $faker->dateTimeBetween('-' . rand($min, $max) . ' day');
     }
 }

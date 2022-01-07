@@ -1,0 +1,52 @@
+grumphp:
+    hooks_dir: ~
+    hooks_preset: local
+    git_hook_variables:
+        VAGRANT_HOST_DIR: .
+        VAGRANT_PROJECT_DIR: /var/www
+        EXEC_GRUMPHP_COMMAND: exec
+        ENV: {}
+    stop_on_failure: false
+    ignore_unstaged_changes: false
+    hide_circumvention_tip: false
+    process_timeout: 60
+    ascii:
+        failed: config/packages/dev/grumphp/failed.txt
+        succeeded: config/packages/dev/grumphp/success.txt
+    parallel:
+        enabled: true
+        max_workers: 32
+    fixer:
+        enabled: true
+        fix_by_default: false
+    environment:
+        files: []
+        variables: {}
+        paths: []
+    tasks:
+        phplint: ~
+        phpcs:
+            standard: []
+            severity: ~
+            error_severity: ~
+            warning_severity: ~
+            tab_width: ~
+            report: full
+            report_width: ~
+            whitelist_patterns: []
+            encoding: ~
+            ignore_patterns: [/migrations/]
+            sniffs: []
+            triggered_by: [php]
+            exclude: []
+        phpstan:
+            autoload_file: ~
+            configuration: ~
+            level: null
+            force_patterns: []
+            ignore_patterns: []
+            triggered_by: ['php']
+            memory_limit: "-1"
+            use_grumphp_paths: true
+    testsuites: []
+    extensions: []

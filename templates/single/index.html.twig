@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Snowtrick -
+	{{ trick.title }}
+{% endblock %}
+
+{% block body %}
+	{% include 'single/hero.html.twig' %}
+	{% include 'single/gallery.html.twig' %}
+	{% include 'single/detail.html.twig' %}
+	{% include 'single/comment.html.twig' %}
+{% endblock %}
