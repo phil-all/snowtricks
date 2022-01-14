@@ -28,7 +28,8 @@ class OwnerFixtures extends Fixture implements DependentFixtureInterface
             ->setLastName('Sweat')
             ->setEmail('jimmy.sweat@fake.com')
             ->setPassword($this->hasher->hashPassword($user, 'pass1234'))
-            ->setRgpd(true);
+            ->setRgpd(true)
+            ->setIsVerified(true);
 
         $manager->persist($user);
 

@@ -36,7 +36,8 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
                 ->setLastName($faker->lastName())
                 ->setEmail($faker->freeEmail())
                 ->setPassword($this->hasher->hashPassword($user, 'pass1234'))
-                ->setRgpd(true);
+                ->setRgpd(true)
+                ->setIsVerified(true);
 
             $manager->persist($user);
 
