@@ -8,7 +8,6 @@ Collaborative web site, about snowboard tricks
 
 -   [Installation](#installation)
 -   [Development environment](#development-environment)
--   [Use doctrine](#use-doctrine)
 
 * * *
 
@@ -43,10 +42,11 @@ You will be able to access following pages, after launching your [development en
     snowtricks/
     ├── assets/
     ├── bin/
+    ├── build/
     ├── config/
-    ├── docker/ (development environment)
+    ├── docker/
     ├── migrations/
-    ├── node_module/
+    ├── node_modules/
     ├── public/
     ├── src/
     ├── templates/
@@ -56,47 +56,15 @@ You will be able to access following pages, after launching your [development en
     ├── var/
     └── vendor/
 
-### Database
-
-Create database (see specificities of doctrine in this development environment [here](#use-doctrine)).
-
-```bash
-php bin/console doctrine:database:create
-```
-
-Migrate migrations to database.
-
-```bash
-php bin/console doctrine:migrations:migrate
-```
-
-### Fixtures
-
-Load fixtures.
-
-```bash
-php bin/console doctrine:fixtures:load
-```
-
-If you decide to reload with database or fixtures modifications, before fixture loading, drop database
-
-```bash
-php bin/console doctrine:schema:drop --force
-```
-
-And then, update database schema
-
-```bash
-php bin/console doctrine:schema:update --force
-```
-
 * * *
 
 ## Development environment
 
+### Launch
+
 `Docker` and `Docker-compose` are needed to use your dev environment.
 
-Launch development environment.
+Launch development environment in docker folder.
 
 ```bash
 cd docker
@@ -113,20 +81,20 @@ It will install following components:
 
 * * *
 
-## Use doctrine
+### Use
 
-:warning: You have to use doctrine in the docker container bash.
+:warning: You have to use the docker container bash.
 
-Open a docker shell:
+Open a shell in root project and launch the docker bash trough the composer.json script `dev-bash`.
 
 ```bash
-cd docker
-
-docker exec -it www_docker_symfony bash
+composer dev-bash
 ```
 
-Then, you can use doctrine:
+### Database
+
+After docker bash lauching, you can create (or recreate) database, update schema and load fixtures trough the composer.json script `set-db`.
 
 ```bash
-php bin/console doctrine:migrations:migrate
+composer set-db
 ```

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription
+{% endblock %}
+
+{% block body %}
+	<div class="container" style="height: 100vh;">
+		<h1>Créez votre compte</h1>
+
+		{{ form_start(registrationForm) }}
+
+		{{ form_row(registrationForm.firstName) }}
+		{{ form_row(registrationForm.lastName) }}
+		{{ form_row(registrationForm.email) }}
+		{{ form_row(registrationForm.plainPassword) }}
+		{{ form_row(registrationForm.gender) }}
+
+		{% set termsOfUseFormGroup %}
+		{{ form_row(registrationForm.rgpd) }}
+		{% endset %}
+		{{ termsOfUseFormGroup|replace({'#RGPD#':'<a class="has-text-underline" href="' ~ absolute_url(path('privacy')) ~ '">documentation</a>'})|raw }}
+
+		<button class="btn btn-lg btn-primary" type="submit">Inscription</button>
+		{{ form_end(registrationForm) }}
+	</div>
+{% endblock %}
