@@ -81,15 +81,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $gender;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    private $isVerified = false;
+    private $registredAt;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->tricks = new ArrayCollection();
-        $this->media = new ArrayCollection();
+        $this->tricks   = new ArrayCollection();
+        $this->media    = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -331,14 +331,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getIsVerified(): ?bool
+    public function getRegistredAt(): ?\DateTimeImmutable
     {
-        return $this->isVerified;
+        return $this->registredAt;
     }
 
-    public function setIsVerified(bool $isVerified): self
+    public function setRegistredAt(?\DateTimeImmutable $registredAt): self
     {
-        $this->isVerified = $isVerified;
+        $this->registredAt = $registredAt;
 
         return $this;
     }
