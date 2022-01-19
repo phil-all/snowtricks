@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="container m-5">
+		<div class="d-flex justify-content-around">
+			<div class="alert alert-success text-center" role="alert">
+				<h1 class="m-5">
+					{% block message_title %}{% endblock %}
+				</h1>
+				{% block message_content %}{% endblock %}
+			</div>
+		</div>
+
+		<a href="{{ path('home') }}">Retour à l'accueil</a>
+	</div>
+{% endblock %}

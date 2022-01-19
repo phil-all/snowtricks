@@ -1,0 +1,11 @@
+{% extends 'success-message.html.twig' %}
+
+{% block message_title %}
+	Bienvenue parmis les membre de la communauté Snowtricks
+{% endblock %}
+
+{% block message_content %}
+	<p>Vous pouvez désormais vous
+		<a href="{{ path('app_login') }}">connecter</a>
+		et publier ou commenter des tricks !</p>
+{% endblock %}
