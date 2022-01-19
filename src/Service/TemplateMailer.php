@@ -21,36 +21,26 @@ class TemplateMailer
     private $mailer;
 
     /**
-     * Undocumented variable
-     *
-     * @var JwtTokenHandler
-     */
-    private $jwt;
-
-    /**
      * @var ContainerInterface
      */
     protected $container;
 
     public function __construct(
         MailerInterface $mailer,
-        JwtTokenHandler $jwt,
         ContainerInterface $container
     ) {
         $this->mailer = $mailer;
-        $this->jwt = $jwt;
         $this->container = $container;
     }
 
-    public function sendValidationMail(User $user)
+    public function sendValidationMail(User $user, JwtTokenHandler $token)
     {
         $userMail = $user->getEmail();
 
-        // generate jwt token
-        $token = $this->jwt->generateToken('account_validation', $userMail, 3600);
-        $tokenInArray = $this->jwt->tokenInArray($token);
+        $tokenInArray = $token->tokenInArray(
+            $token->generateToken('account_validation', $userMail, 3600)
+        );
 
-        //send email
         $email = (new TemplatedEmail())
             ->from('team.snowtricks@example.com')
             ->to($userMail)

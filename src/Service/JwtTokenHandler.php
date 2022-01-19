@@ -20,6 +20,11 @@ class JwtTokenHandler
     ];
 
     /**
+     * @var string
+     */
+    private string $token;
+
+    /**
      * @var KernelInterface
      */
     private KernelInterface $kernel;
@@ -61,6 +66,51 @@ class JwtTokenHandler
         $encodedSignature = $this->encodeSignature($encodedHeader, $encodedPayload);
 
         return $encodedHeader . '.' . $encodedPayload . '.' . $encodedSignature;
+    }
+
+    /**
+     * Split a token in an array
+     *
+     * @param string $token
+     *
+     * @return array
+     */
+    public function tokenInArray(string $token): array
+    {
+        return explode('.', $token, 3);
+    }
+
+    /**
+     * Checks if a token is valid, in analysing its compodsition, its signature,
+     * its expiration date and if containing user email.
+     *
+     * @param string $token
+     *
+     * @return boolean
+     */
+    public function tokenChecker(string $token): bool
+    {
+        $this->setToken($token);
+
+        return ($this->isJWT()
+            && $this->isSignatureCorrect()
+            && $this->isNotExpired()
+            && $this->isUserMail()
+        );
+    }
+
+    /**
+     * Get user email from token payload
+     *
+     * @param string $token
+     *
+     * @return string
+     */
+    public function getMail(string $token): string
+    {
+        $payload = $this->decodeDatas($token, 1);
+
+        return $payload['email'];
     }
 
     /**
@@ -115,7 +165,7 @@ class JwtTokenHandler
      *
      * @return mixed
      */
-    public function decodeDatas(string $token, int $typeKey): mixed
+    private function decodeDatas(string $token, int $typeKey): mixed
     {
         $token = explode('.', $token);
 
@@ -145,25 +195,21 @@ class JwtTokenHandler
     /**
      * Checks if token composition is conform to Json Web Token.
      *
-     * @param string $token
-     *
      * @return boolean
      */
-    public function isJWT(string $token): bool
+    private function isJWT(): bool
     {
-        return (preg_match('~^[\w\-]+\.[\w\-]+\.[\w\-]+$~', $token)) ? true : false;
+        return (preg_match('~^[\w\-]+\.[\w\-]+\.[\w\-]+$~', $this->token)) ? true : false;
     }
 
     /**
      * Checks a given token signature.
      *
-     * @param string $token
-     *
      * @return boolean
      */
-    public function isSignatureCorrect(string $token): bool
+    private function isSignatureCorrect(): bool
     {
-        $token            = explode('.', $token);
+        $token            = $this->tokenInArray($this->token);
         $header           = $token[0];
         $payload          = $token[1];
         $givenSignature   = $token[2];
@@ -175,42 +221,37 @@ class JwtTokenHandler
     /**
      * Checks if a token is expired.
      *
-     * @param array $payload token payload
+     * @return boolean
+     */
+    private function isNotExpired(): bool
+    {
+        $payload = $this->decodeDatas($this->token, 1);
+
+        return (!array_key_exists('exp', $payload)) ? false : (time() < $payload['exp']);
+    }
+
+    /**
+     * Checks if payload token contains an user mail.
      *
      * @return boolean
      */
-    public function isExpired(array $payload): bool
+    private function isUserMail(): bool
     {
-        return (time() > $payload['exp']);
+        $payload = $this->decodeDatas($this->token, 1);
+
+        return (array_key_exists('email', $payload));
     }
 
     /**
-     * Return a url friendly JWT token.
-     * Used for validation link.
+     * Set token.
      *
      * @param string $token
      *
-     * @return string|null
+     * @return void
      */
-    public function tokenToUri(string $token): ?string
+    private function setToken(string $token): void
     {
-        $totkenUri = preg_replace('~[.]~', '/', $token);
-
-        return $totkenUri;
-    }
-
-    /**
-     * Transform uri params in a string with dots separators, as follow :
-     * - foo/bar/baz in uri becomes: foo.bar.baz
-     *
-     * @param array $params
-     *
-     * @return string
-     */
-    public function uriToToken(array $params): string
-    {
-        $token = implode('.', $params);
-        return $token;
+        $this->token = $token;
     }
 
     /**
@@ -224,17 +265,5 @@ class JwtTokenHandler
         $dotenv->load($this->kernel->getProjectDir() . '/.env.local');
 
         $this->key = (getenv('JWT_KEY') !== false) ? getenv('JWT_KEY') : '';
-    }
-
-    /**
-     * Split a token in an array
-     *
-     * @param string $token
-     *
-     * @return array
-     */
-    public function tokenInArray(string $token): array
-    {
-        return explode('.', $token, 3);
     }
 }
