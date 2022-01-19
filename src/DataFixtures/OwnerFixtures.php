@@ -2,11 +2,12 @@
 
 namespace App\DataFixtures;
 
+use Faker\Factory;
 use App\Entity\User;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class OwnerFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -20,6 +21,8 @@ class OwnerFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $user = new User();
+        $faker = Factory::create('fr_FR');
+        $registration = $faker->dateTimeBetween('-' . rand(31, 60) . ' day');
 
         $user->setRoles(['ROLE_ADMIN'])
             ->setStatus($this->getReference('status_2'))
@@ -29,7 +32,7 @@ class OwnerFixtures extends Fixture implements DependentFixtureInterface
             ->setEmail('jimmy.sweat@fake.com')
             ->setPassword($this->hasher->hashPassword($user, 'pass1234'))
             ->setRgpd(true)
-            ->setIsVerified(true);
+            ->setRegistredAt(\DateTimeImmutable::createFromMutable($registration));
 
         $manager->persist($user);
 
