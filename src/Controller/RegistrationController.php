@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface as Hasher;
 
 /**
  * Class RegistrationController
@@ -25,43 +25,44 @@ class RegistrationController extends AbstractController
     private JwtTokenHandler $token;
 
     /**
+     * @var UserRepository
+     */
+    private UserRepository $userRepository;
+
+    /**
      * RegistrationController constructor
      *
      * @param JwtTokenHandler $token
+     * @param UserRepository  $userRepository
      */
-    public function __construct(JwtTokenHandler $token)
+    public function __construct(JwtTokenHandler $token, UserRepository $userRepository)
     {
-        $this->token = $token;
+        $this->token          = $token;
+        $this->userRepository = $userRepository;
     }
 
     /**
      * @Route("/inscription", name="app_register")
      *
-     * @param Request $request
-     * @param UserRepository $userRepository
+     * @param Request        $request
      * @param TemplateMailer $mailer
-     * @param UserPasswordHasherInterface $passwordHasher
+     * @param Hasher         $passwordHasher
      *
      * @return Response
      */
-    public function register(
-        Request $request,
-        UserRepository $userRepository,
-        TemplateMailer $mailer,
-        UserPasswordHasherInterface $passwordHasher
-    ): Response {
-
+    public function register(Request $request, TemplateMailer $mailer, Hasher $passwordHasher): Response
+    {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userRepository->createPendingUser($user, $passwordHasher, $form->get('plainPassword')->getData());
+            $email = $user->getEmail();
+            $this->userRepository->createPendingUser($user, $passwordHasher, $form->get('plainPassword')->getData());
+            $mailer->sendValidationMail($email);
 
-            $mailer->sendValidationMail($user, $this->token);
-
-            return $this->render('messages/waiting-validation-account.html.twig', [
-                'email' => $user->getEmail(),
+            return $this->render('messages/registration/waiting-validation-account.html.twig', [
+                'email' => $email,
             ]);
         }
 
@@ -79,13 +80,8 @@ class RegistrationController extends AbstractController
      *
      * @return Response
      */
-    public function validation(
-        string $header,
-        string $payload,
-        string $signature,
-        UserRepository $userRepository
-    ): Response {
-
+    public function validation(string $header, string $payload, string $signature): Response
+    {
         $token = $header . '.' . $payload . '.' . $signature;
 
         if (!$this->token->tokenChecker($token)) {
@@ -93,15 +89,15 @@ class RegistrationController extends AbstractController
         }
 
         $email  = $this->token->getMail($token);
-        $user   = $userRepository->findOneByEmail($email);
+        $user   = $this->userRepository->findOneByEmail($email);
         $status = $user->getStatus();
 
         if ($status->getId() !== 1) {
-            return $this->render('messages/user-already-validated.html.twig', []);
+            return $this->render('messages/registration/user-already-validated.html.twig', []);
         }
 
-        $userRepository->userActivation($user);
+        $this->userRepository->userActivation($user);
 
-        return $this->render('messages/account-confirmation.html.twig', []);
+        return $this->render('messages/registration/account-confirmation.html.twig', []);
     }
 }
