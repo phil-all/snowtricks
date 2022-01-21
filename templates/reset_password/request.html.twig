@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mot de passe oublié
+{% endblock %}
+
+{% block body %}
+	<div class="container text-center" style="height: 100vh;">
+		<h1 class="my-5">Mot de passe oublié</h1>
+
+		{{ form_start(resetPassword) }}
+
+		<div class="m-3 text-muted">
+			<small>
+				Entrez l'adresse e-mail associée à votre profil afin de recevoir un lien pour renouveller votre mot de passe.
+			</small>
+		</div>
+
+		{{ form_row(resetPassword.email) }}
+
+		<button class="btn btn-lg btn-primary" type="submit">Valider</button>
+		{{ form_end(resetPassword) }}
+	</div>
+{% endblock %}

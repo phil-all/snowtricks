@@ -21,6 +21,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
+        $registration = $faker->dateTimeBetween('-' . rand(31, 60) . ' day');
         $countValid = 1;
         $countNonPending = 1;
 
@@ -36,8 +37,11 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
                 ->setLastName($faker->lastName())
                 ->setEmail($faker->freeEmail())
                 ->setPassword($this->hasher->hashPassword($user, 'pass1234'))
-                ->setRgpd(true)
-                ->setIsVerified(true);
+                ->setRgpd(true);
+
+            if ($randomStatus !== 1) {
+                $user->setRegistredAt(\DateTimeImmutable::createFromMutable($registration));
+            }
 
             $manager->persist($user);
 

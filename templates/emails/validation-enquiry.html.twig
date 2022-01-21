@@ -1,0 +1,15 @@
+{% extends 'email.html.twig' %}
+
+{% block mail %}
+	<h1 class="m-5">Confirmez votre inscription</h1>
+	<p>Nous sommes heureux de l'intérêt que vous nous portez, mais avant toute chose, vous devez d'abord confirmer votre inscription. Cliquez juste sur le bouton ci-dessous.</p>
+	<a href="{{ url }}" class="btn btn-success m-4">
+		Validez votre inscription
+	</a>
+	<p>Si le bouton ne marche pas, copiez et collez dans votre navigateur le lien ci-dessous:</p>
+	<a href="{{ url }}" class="m-3">
+		{{ url }}
+	</a>
+	<p class="mt-3">Si vous avez la moindre question, contactez nous via le formulaire de contact. Nous serons ravis de vous répondre.</p>
+	<p>Cordialement,<br/>La team Snowtricks</p>
+{% endblock %}

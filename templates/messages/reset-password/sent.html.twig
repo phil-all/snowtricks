@@ -1,0 +1,13 @@
+{% extends 'success-message.html.twig' %}
+
+{% block message_title 'Demande de nouveau mot de passe' %}
+
+{% block message_content %}
+	<p>Nous avons reçu une demande de changement de mot de passe concernant votre compte.</p>
+	<p>Nous avons envoyé un e-mail à l'adresse
+		<strong>{{ email }}</strong>
+		pour vérifier que vous en êtes bien à l'origine.
+		<br>
+		Consultez votre boite de réception et suivez les instructions pour finaliser votre réinitialisation du mot de passe.
+	</p>
+{% endblock %}

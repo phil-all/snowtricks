@@ -3,11 +3,14 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\StatusRepository;
+use DateTimeImmutable;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,8 +20,15 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @var StatusRepository
+     */
+    private StatusRepository $status;
+
+    public function __construct(ManagerRegistry $registry, StatusRepository $status)
     {
+        $this->status = $status;
+
         parent::__construct($registry, User::class);
     }
 
@@ -34,6 +44,62 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
+    }
+
+    /**
+     * Used to create a new pending user.
+     */
+    public function createPendingUser(User $user, UserPasswordHasherInterface $hasher, string $password): void
+    {
+        if (!$user instanceof User) {
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
+        }
+
+        $user->setStatus($this->status->findOneByStatus('pending'))
+            ->setRoles(['ROLE_USER'])
+            ->setPassword($hasher->hashPassword($user, $password));
+
+        $this->_em->persist($user);
+        $this->_em->flush();
+    }
+
+    /**
+     * Used to activate a pending user.
+     */
+    public function userActivation(User $user): void
+    {
+        if (!$user instanceof User) {
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
+        }
+
+        $user->setStatus($this->status->findOneByStatus('active'))
+            ->setRegistredAt(new DateTimeImmutable('now'));
+
+        $this->_em->persist($user);
+        $this->_em->flush();
+    }
+
+    public function changePassword(User $user, UserPasswordHasherInterface $hasher, string $password): void
+    {
+        $user->setPassword($hasher->hashPassword($user, $password));
+
+        $this->_em->persist($user);
+        $this->_em->flush();
+    }
+
+    /**
+     * Find an user by its email
+     *
+     * @param string $value
+     * @return User|null
+     */
+    public function findOneByEmail(string $value): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.email = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     // /**

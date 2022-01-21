@@ -1,0 +1,15 @@
+{% extends 'success-message.html.twig' %}
+
+{% block message_title %}
+	Confirmez l'adress e-mail
+{% endblock %}
+
+{% block message_content %}
+	<p>Votre demande d'incription a bien été prise en compte.</p>
+	<p>Nous avons envoyé un e-mail à l'adresse
+		<strong>{{ email }}</strong>
+		pour vérifier que vous en êtes bien le titulaire.
+		<br>
+		Consultez votre boite de réception et suivez les instructions pour finaliser votre inscription.
+	</p>
+{% endblock %}
