@@ -72,7 +72,7 @@ class ResetPasswordController extends AbstractController
      * @param string $payload
      * @param string $signature
      *
-     * @return mixed void if token checking is true, else RedirectResponse
+     * @return RedirectResponse
      */
     public function tokenizer(string $header, string $payload, string $signature): RedirectResponse
     {
