@@ -2,6 +2,7 @@
 
 namespace App\Helper;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
