@@ -79,6 +79,14 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    public function changePassword(User $user, UserPasswordHasherInterface $hasher, string $password): void
+    {
+        $user->setPassword($hasher->hashPassword($user, $password));
+
+        $this->_em->persist($user);
+        $this->_em->flush();
+    }
+
     /**
      * Find an user by its email
      *
