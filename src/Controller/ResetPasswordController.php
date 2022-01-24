@@ -74,21 +74,21 @@ class ResetPasswordController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function tokenizer(string $header, string $payload, string $signature): RedirectResponse
+    public function checkMail(string $header, string $payload, string $signature): RedirectResponse
     {
         $token = $header . '.' . $payload . '.' . $signature;
 
         if (!$this->token->tokenChecker($token)) {
-            return $this->redirectToRoute('app_reset_password_invalid_link');
+            return $this->redirectToRoute('app_invalid_link');
         }
 
         $this->storeInSession('ResetPasswordToken', $token);
 
-        return $this->redirectToRoute('app_check_mail');
+        return $this->redirectToRoute('app_update_password');
     }
 
     /**
-     * @Route("/update-password", name="app_check_mail")
+     * @Route("/update-password", name="app_update_password")
      *
      * @param Request        $request
      * @param UserRepository $userRepository
@@ -114,15 +114,5 @@ class ResetPasswordController extends AbstractController
         return $this->render('reset_password/reset.html.twig', [
             'resetPassword' => $form->createView(),
         ]);
-    }
-
-    /**
-     * @Route("/reset/lien-non-valide", name="app_reset_password_invalid_link")
-     *
-     * @return Response
-     */
-    public function invalidLink(): Response
-    {
-        return $this->render('messages/invalid-link.html.twig', []);
     }
 }
