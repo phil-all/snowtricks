@@ -18,7 +18,7 @@
 		{% set termsOfUseFormGroup %}
 		{{ form_row(registrationForm.rgpd) }}
 		{% endset %}
-		{{ termsOfUseFormGroup|replace({'#RGPD#':'<a class="has-text-underline" href="' ~ absolute_url(path('privacy')) ~ '">documentation</a>'})|raw }}
+		{{ termsOfUseFormGroup|replace({'#RGPD#':'<a class="has-text-underline" href="' ~ absolute_url(path('app_privacy')) ~ '">documentation</a>'})|raw }}
 
 		<button class="btn btn-lg btn-primary" type="submit">Inscription</button>
 		{{ form_end(registrationForm) }}

@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class SingleController extends AbstractController
 {
     /**
-     * @Route("/trick/{id}/{slug}", name="trick_read")
+     * @Route("/trick/{id}/{slug}", name="app_trick_read")
      *
      * @param Trick $trick
      * @return Response
