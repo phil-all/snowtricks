@@ -28,6 +28,11 @@ class ResetPasswordController extends AbstractController
      */
     private JwtTokenHandler $token;
 
+    /**
+     * ResetPasswordController constructor
+     *
+     * @param JwtTokenHandler $token
+     */
     public function __construct(JwtTokenHandler $token)
     {
         $this->token = $token;
@@ -76,15 +81,12 @@ class ResetPasswordController extends AbstractController
      */
     public function checkMail(string $header, string $payload, string $signature): RedirectResponse
     {
-        $token = $header . '.' . $payload . '.' . $signature;
-
-        if (!$this->token->tokenChecker($token)) {
-            return $this->redirectToRoute('app_invalid_link');
-        }
-
+        $token = implode('.', func_get_args());
         $this->storeInSession('ResetPasswordToken', $token);
 
-        return $this->redirectToRoute('app_update_password');
+        return ($this->token->tokenChecker($token))
+            ? $this->redirectToRoute('app_update_password')
+            : $this->redirectToRoute('app_error_visitor_link');
     }
 
     /**

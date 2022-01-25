@@ -86,15 +86,12 @@ class RegistrationController extends AbstractController
      */
     public function checkMail(string $header, string $payload, string $signature): RedirectResponse
     {
-        $token = $header . '.' . $payload . '.' . $signature;
-
-        if (!$this->token->tokenChecker($token)) {
-            return $this->redirectToRoute('app_invalid_link');
-        }
-
+        $token = implode('.', func_get_args());
         $this->storeInSession('RegisterToken', $token);
 
-        return $this->redirectToRoute('app_register_validation');
+        return ($this->token->tokenChecker($token))
+            ? $this->redirectToRoute('app_register_validation')
+            : $this->redirectToRoute('app_error_visitor_link');
     }
 
     /**
