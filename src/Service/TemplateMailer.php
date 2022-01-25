@@ -80,7 +80,7 @@ class TemplateMailer
         return $this->setTemplate($email, [
             'subject' => 'Confirmez votre inscription',
             'path'    => 'emails/validation-enquiry.html.twig',
-            'target'  => 'app_account_validation'
+            'target'  => 'app_register_checkmail'
         ]);
     }
 
