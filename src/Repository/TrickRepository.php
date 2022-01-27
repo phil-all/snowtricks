@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Trick;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use DateTimeImmutable;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\String\Slugger\AsciiSlugger;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Trick|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +19,20 @@ class TrickRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Trick::class);
+    }
+
+    /**
+     * Used to update a trick
+     */
+    public function update(Trick $trick): void
+    {
+        $slugger = new AsciiSlugger();
+
+        $trick->setSlug($slugger->slug($trick->getTitle(), '-'))
+            ->setUpdateAt(new DateTimeImmutable('now'));
+
+        $this->_em->persist($trick);
+        $this->_em->flush();
     }
 
     // /**

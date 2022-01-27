@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Modifier un trick' %}
+
+{% block body %}
+	<div class="container">
+		<h1>Modifier</h1>
+		<div>
+			{{ form_start(updateForm) }}
+
+			{{ form_row(updateForm.title, {'attr': {'placeholder': trick.title,}}) }}
+
+			{{ form_row(updateForm.category) }}
+
+			{{ form_row(updateForm.content, {'attr': {'placeholder': trick.content}}) }}
+
+			<button class="btn btn-lg btn-primary" type="submit">Modifier</button>
+			{{ form_end(updateForm) }}
+		</div>
+	</div>
+{% endblock %}
