@@ -2,11 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\TrickRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 use DateTimeImmutable;
+use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TypeRepository;
+use App\Repository\UserRepository;
+use App\Repository\TrickRepository;
+use App\Service\Entity\TrickService;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Proxies\__CG__\App\Entity\Trick as EntityTrick;
 
 /**
  * @ORM\Entity(repositoryClass=TrickRepository::class)
@@ -67,10 +71,51 @@ class Trick
      */
     private $media;
 
+    /**
+     * @var string
+     */
+    private string $thumbnailPath;
+
+    /**
+     * @var array
+     */
+    private array $imagesPath;
+
+    /**
+     * @var array
+     */
+    private array $videosPath;
+
+    /**
+     * @var TrickService
+     */
+    private TrickService $trickService;
+
     public function __construct()
     {
-        $this->comments = new ArrayCollection();
-        $this->media = new ArrayCollection();
+        $this->media         = new ArrayCollection();
+        $this->comments      = new ArrayCollection();
+        $this->thumbnailPath = $this->getMediaPath('thumbnail');
+    }
+
+    public function getThumbnailPath(): string
+    {
+        return $this->getMediaPath('thumbnail');
+    }
+
+    public function addThumbnailPath(): void
+    {
+        $this->thumbnailPath = $this->getMediaPath('thumbnail');
+    }
+
+    public function addImagesPath(): void
+    {
+        $this->imagesPath = $this->getMediaPath('image');
+    }
+
+    public function addVideosPath(): void
+    {
+        $this->videosPath = $this->getMediaPath('video');
     }
 
     public function getId(): ?int
@@ -220,5 +265,10 @@ class Trick
         }
 
         return $this;
+    }
+
+    private function getMediaPath(string $type): string|array
+    {
+        return (new TrickService())->findMediaPath($this->media, $type);
     }
 }

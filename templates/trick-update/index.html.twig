@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Modifier un trick' %}
+
+{% block body %}
+	<div class="container">
+		<h1 class="text-center text-muted my-5">Modification</h1>
+
+		<section style="height: 45vh; background-image: url('{{ asset('images/' ~ trick.thumbnailPath) }}');" class="center-image d-flex flex-column justify-content-around text-white mb-5"></section>
+
+		<section class="mt-5 container-fluid border border-light">
+			<h4 class="text-muted">images</h4>
+			<div class="d-md-flex justify-content-center">
+				{% for key, value in trick.imagesPath%}
+					<div class="px-1 py-1">
+						<img src="{{ asset('images/') }}{{ value }}" alt="{{ value }}" width="320" height="208">
+					</div>
+				{% endfor %}
+			</div>
+		</section>
+
+		<section class="mt-5 container-fluid border border-light">
+			<h4 class="text-muted">videos</h4>
+			<div class="d-md-flex justify-content-center">
+				{% for key, value in trick.videosPath%}
+					<div class="px-1 py-1">
+						<iframe width="320" height="208" src="{{ value }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				{% endfor %}
+			</div>
+		</section>
+
+		<section class="my-5">
+			{{ form_start(updateForm) }}
+
+			<div class="row">
+				<div class="col">
+					{{ form_row(updateForm.title, {'attr': {'placeholder': trick.title,}}) }}
+				</div>
+				<div class="col">
+					{{ form_row(updateForm.category) }}
+				</div>
+			</div>
+
+			{{ form_row(updateForm.content, {'attr': {'placeholder': trick.content}}) }}
+
+			<div class="row my-5">
+				<div class="col">
+					<button class="btn btn-lg btn-primary" type="submit">Sauvegarder les modifications</button>
+				</div>
+				<div class="col d-flex justify-content-end">
+					<button class="btn btn-lg btn-primary">Supprimer le trick</button>
+				</div>
+			</div>
+
+
+			{{ form_end(updateForm) }}
+		</section>
+	</div>
+{% endblock %}

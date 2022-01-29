@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Class StaticController
@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class StaticController extends AbstractController
 {
     /**
-     * @Route("/protection-des-donnees-utilisateur", name="privacy")
+     * @Route("/protection-des-donnees-utilisateur", name="app_privacy")
      *
      * @return Response
      */

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Helper\SessionTrait;
 use App\Service\TemplateMailer;
 use App\Service\JwtTokenHandler;
 use App\Form\RegistrationFormType;
@@ -10,6 +11,7 @@ use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface as Hasher;
 
@@ -19,6 +21,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface as Hashe
  */
 class RegistrationController extends AbstractController
 {
+    use SessionTrait;
+
     /**
      * @var JwtTokenHandler
      */
@@ -72,23 +76,32 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/validation/{header}/{payload}/{signature}", name="app_account_validation")
+     * @Route("/inscription/{header}/{payload}/{signature}", name="app_register_checkmail")
      *
      * @param string $header
      * @param string $payload
      * @param string $signature
      *
+     * @return RedirectResponse
+     */
+    public function checkMail(string $header, string $payload, string $signature): RedirectResponse
+    {
+        $token = implode('.', func_get_args());
+        $this->storeInSession('RegisterToken', $token);
+
+        return ($this->token->tokenChecker($token))
+            ? $this->redirectToRoute('app_register_validation')
+            : $this->redirectToRoute('app_error_visitor_link');
+    }
+
+    /**
+     * @Route("/inscription/validation", name="app_register_validation")
+     *
      * @return Response
      */
-    public function validation(string $header, string $payload, string $signature): Response
+    public function validation(): Response
     {
-        $token = $header . '.' . $payload . '.' . $signature;
-
-        if (!$this->token->tokenChecker($token)) {
-            return $this->render('messages/invalid-link.html.twig', []);
-        }
-
-        $email  = $this->token->getMail($token);
+        $email = $this->token->getMail($this->getFromSession('RegisterToken'));
         $user   = $this->userRepository->findOneByEmail($email);
         $status = $user->getStatus();
 
@@ -97,6 +110,7 @@ class RegistrationController extends AbstractController
         }
 
         $this->userRepository->userActivation($user);
+        $this->sessionInvalidate();
 
         return $this->render('messages/registration/account-confirmation.html.twig', []);
     }
