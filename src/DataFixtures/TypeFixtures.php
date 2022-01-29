@@ -3,14 +3,19 @@
 namespace App\DataFixtures;
 
 use App\Entity\Type;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 
 class TypeFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $types = ['avatar', 'image', 'video'];
+        $types = [
+            'avatar',
+            'thumbnail',
+            'image',
+            'video'
+        ];
 
         foreach ($types as $value) {
             $type = new Type();

@@ -2,10 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Gender;
 use App\Entity\Media;
-use App\Entity\Trick;
-use App\Entity\User;
+use App\Entity\Gender;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
@@ -14,9 +12,9 @@ class MediaFixtures extends TrickFixtures implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         // user avatar
-        for ($l = 1; $l <= $this->getCount('nonPendingUser'); $l++) {
+        for ($i = 1; $i <= $this->getCount('nonPendingUser'); $i++) {
             $media = new Media();
-            $user = $this->getReference('nonPendingUser_' . $l);
+            $user = $this->getReference('nonPendingUser_' . $i);
 
             $media->setFile($this->getRandomAvatar($user->getGender()))
                 ->setType($this->getReference('type_avatar'))
@@ -25,26 +23,37 @@ class MediaFixtures extends TrickFixtures implements DependentFixtureInterface
             $manager->persist($media);
         }
 
-        // trick image and video
-        for ($i = 1; $i <= $this->getCount('trick'); $i++) {
-            for ($j = 1; $j <= rand(1, 5); $j++) {
+        // trick media
+        for ($j = 1; $j <= $this->getCount('trick'); $j++) {
+            // thumbnail
+            $media = new Media();
+
+            $media->setFile($this->getRandomImagePath())
+                ->setType($this->getReference('type_thumbnail'))
+                ->setTrick($this->getReference('trick_' . $j));
+
+            $manager->persist($media);
+
+            // images
+            for ($k = 1; $k <= rand(1, 5); $k++) {
                 $media = new Media();
 
                 $media->setFile($this->getRandomImagePath())
                     ->setType($this->getReference('type_image'))
-                    ->setTrick($this->getReference('trick_' . $i));
+                    ->setTrick($this->getReference('trick_' . $j));
 
                 $manager->persist($media);
             }
 
+            // videos
             $videoCount = rand(0, 3);
             if ($videoCount > 0) {
-                for ($k = 1; $k <= $videoCount; $k++) {
+                for ($l = 1; $l <= $videoCount; $l++) {
                     $media = new Media();
 
                     $media->setFile($this->getRandomYoutubeUri())
                         ->setType($this->getReference('type_video'))
-                        ->setTrick($this->getReference('trick_' . $i));
+                        ->setTrick($this->getReference('trick_' . $j));
 
                     $manager->persist($media);
                 }
