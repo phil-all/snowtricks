@@ -70,6 +70,10 @@ class TrickController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
+        $trick->addThumbnailPath();
+        $trick->addImagesPath();
+        $trick->addVideosPath();
+
         return $this->render('trick-update/index.html.twig', [
             'trick'      => $trick,
             'updateForm' => $form->createView(),
