@@ -11,9 +11,9 @@
 		<section class="mt-5 container-fluid border border-light">
 			<h4 class="text-muted">images</h4>
 			<div class="d-md-flex justify-content-center">
-				{% for key, value in trick.imagesPath%}
+				{% for imagePath in trick.imagesPathList %}
 					<div class="px-1 py-1">
-						<img src="{{ asset('images/') }}{{ value }}" alt="{{ value }}" width="320" height="208">
+						<img src="{{ asset('images/') }}{{ imagePath }}" width="320" height="208">
 					</div>
 				{% endfor %}
 			</div>
@@ -22,9 +22,9 @@
 		<section class="mt-5 container-fluid border border-light">
 			<h4 class="text-muted">videos</h4>
 			<div class="d-md-flex justify-content-center">
-				{% for key, value in trick.videosPath%}
+				{% for videoPath in trick.videosPathList %}
 					<div class="px-1 py-1">
-						<iframe width="320" height="208" src="{{ value }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+						<iframe width="320" height="208" src="{{ videoPath }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 					</div>
 				{% endfor %}
 			</div>

@@ -40,8 +40,6 @@ class TrickController extends AbstractController
      */
     public function read(Trick $trick): Response
     {
-        $trick->addThumbnailPath();
-
         return $this->render('single/index.html.twig', [
             'trick' => $trick
         ]);
@@ -69,10 +67,6 @@ class TrickController extends AbstractController
 
             return $this->redirectToRoute('app_home');
         }
-
-        $trick->addThumbnailPath();
-        $trick->addImagesPath();
-        $trick->addVideosPath();
 
         return $this->render('trick-update/index.html.twig', [
             'trick'      => $trick,
