@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\MediaRepository;
 
 /**
  * @ORM\Entity(repositoryClass=MediaRepository::class)
@@ -23,7 +23,7 @@ class Media
     private $file;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="media")
+     * @ORM\ManyToOne(targetEntity=Type::class, fetch="EAGER", inversedBy="media")
      * @ORM\JoinColumn(nullable=false)
      */
     private $type;
