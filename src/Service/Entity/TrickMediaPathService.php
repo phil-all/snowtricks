@@ -77,14 +77,14 @@ class TrickMediaPathService
 
         foreach ($medias as $key => $entity) {
             if ($entity->getType()->getType() === 'thumbnail') {
-                $thumbnail = $entity->getFile();
+                $thumbnail = $entity->getPath();
             }
 
             if ($entity->getType()->getType() === 'image') {
-                $images[] = $entity->getFile();
+                $images[] = $entity->getPath();
             }
             if ($entity->getType()->getType() === 'video') {
-                $videos[] = $entity->getFile();
+                $videos[] = $entity->getPath();
             }
         }
 

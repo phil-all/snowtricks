@@ -16,7 +16,7 @@ class MediaFixtures extends TrickFixtures implements DependentFixtureInterface
             $media = new Media();
             $user = $this->getReference('nonPendingUser_' . $i);
 
-            $media->setFile($this->getRandomAvatar($user->getGender()))
+            $media->setPath($this->getRandomAvatar($user->getGender()))
                 ->setType($this->getReference('type_avatar'))
                 ->setUser($user);
 
@@ -28,7 +28,7 @@ class MediaFixtures extends TrickFixtures implements DependentFixtureInterface
             // thumbnail
             $media = new Media();
 
-            $media->setFile($this->getRandomImagePath())
+            $media->setPath($this->getRandomImagePath())
                 ->setType($this->getReference('type_thumbnail'))
                 ->setTrick($this->getReference('trick_' . $j));
 
@@ -38,7 +38,7 @@ class MediaFixtures extends TrickFixtures implements DependentFixtureInterface
             for ($k = 1; $k <= rand(1, 5); $k++) {
                 $media = new Media();
 
-                $media->setFile($this->getRandomImagePath())
+                $media->setPath($this->getRandomImagePath())
                     ->setType($this->getReference('type_image'))
                     ->setTrick($this->getReference('trick_' . $j));
 
@@ -51,7 +51,7 @@ class MediaFixtures extends TrickFixtures implements DependentFixtureInterface
                 for ($l = 1; $l <= $videoCount; $l++) {
                     $media = new Media();
 
-                    $media->setFile($this->getRandomYoutubeUri())
+                    $media->setPath($this->getRandomYoutubeUri())
                         ->setType($this->getReference('type_video'))
                         ->setTrick($this->getReference('trick_' . $j));
 
