@@ -2,7 +2,7 @@
 	<div class="d-md-flex justify-content-center">
 		{% for imagePath in trick.imagesPathList %}
 			<div class="px-1 py-1">
-				<img src="{{ asset('images/') }}{{ imagePath }}" alt="{{ imagePath }}" width="320" height="208">
+				<img src="{{ asset('uploads/') }}{{ imagePath }}" alt="{{ imagePath }}" width="320" height="208">
 			</div>
 		{% endfor %}
 		{% for videoPath in trick.videosPathList %}

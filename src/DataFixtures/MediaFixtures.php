@@ -78,7 +78,7 @@ class MediaFixtures extends TrickFixtures implements DependentFixtureInterface
     {
         $number = sprintf('%02d', rand(1, 29));
 
-        return 'demo-data/demopix' . $number . '.jpg';
+        return 'demopix' . $number . '.jpg';
     }
 
     /**

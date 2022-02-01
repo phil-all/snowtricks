@@ -37,24 +37,15 @@ You will be able to access following pages, after launching your [development en
 | symfony home page | 127.0.0.1:8741 |
 | mailDev inbox     | 127.0.0.1:8081 |
 
-## Directory structure
+## Make upload folder writable
 
-    snowtricks/
-    ├── assets/
-    ├── bin/
-    ├── build/
-    ├── config/
-    ├── docker/
-    ├── migrations/
-    ├── node_modules/
-    ├── public/
-    ├── src/
-    ├── templates/
-    ├── tests/
-    ├── translations/
-    ├── uml/
-    ├── var/
-    └── vendor/
+Change the directory rights
+
+```bash
+chown -R www-data:www-data public/uploads
+
+chmod -R 770 public/uploads
+```
 
 * * *
 
