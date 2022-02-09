@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MediaRepository;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity(repositoryClass=MediaRepository::class)
@@ -37,6 +38,11 @@ class Media
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="media")
      */
     private $user;
+
+    /**
+     * @var UploadedFile
+     */
+    private UploadedFile $file;
 
     public function getId(): ?int
     {
@@ -87,6 +93,30 @@ class Media
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of file
+     *
+     * @return  UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * Set the value of file
+     *
+     * @param  UploadedFile  $file
+     *
+     * @return  self
+     */
+    public function setFile(UploadedFile $file)
+    {
+        $this->file = $file;
 
         return $this;
     }
