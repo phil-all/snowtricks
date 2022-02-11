@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\Type;
 use App\Entity\Media;
 use App\Entity\Trick;
-use App\Repository\TypeRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -28,7 +27,7 @@ class MediaRepository extends ServiceEntityRepository
      * @param ManagerRegistry $registry
      * @param string          $uploadsDir
      */
-    public function __construct(ManagerRegistry $registry, TypeRepository $typeRepository, string $uploadsDir)
+    public function __construct(ManagerRegistry $registry, string $uploadsDir)
     {
         $this->uploadsDir        = $uploadsDir;
 
