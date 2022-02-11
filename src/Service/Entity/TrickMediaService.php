@@ -12,21 +12,6 @@ use Doctrine\Common\Collections\Collection;
 class TrickMediaService
 {
     /**
-     * @var string|null
-     */
-    private ?string $thumbnailPath;
-
-    /**
-     * @var array|null
-     */
-    private ?array $imagesPathList;
-
-    /**
-     * @var array|null
-     */
-    private ?array $videosPathList;
-
-    /**
      * @var Trick
      */
     private Trick $trick;
@@ -39,7 +24,6 @@ class TrickMediaService
     public function __construct(Trick $trick)
     {
         $this->trick = $trick;
-        $this->setGettersPath();
     }
 
     /**
@@ -57,64 +41,5 @@ class TrickMediaService
         return $mediaCollection->filter(function (Media $media) use ($type) {
             return $media->getType()->getType() === $type;
         });
-    }
-
-    /**
-     * Gets thumbnail path
-     *
-     * @return string|null
-     */
-    public function getThumbnailPath(): ?string
-    {
-        return $this->thumbnailPath;
-    }
-
-    /**
-     * Gets images path list
-     *
-     * @return array
-     */
-    public function getImagesPathList(): ?array
-    {
-        return $this->imagesPathList;
-    }
-
-    /**
-     * Gets videos path list
-     *
-     * @return array
-     */
-    public function getVideosPathList(): ?array
-    {
-        return $this->videosPathList;
-    }
-
-    /**
-     * Sets path getters properties
-     *
-     * @return void
-     */
-    private function setGettersPath(): void
-    {
-        /** @var array $medias */
-        $medias = $this->trick->getMedia()->getValues();
-
-        /** @var  Media $media */
-        foreach ($medias as $key => $media) {
-            if ($media->getType()->getType() === 'thumbnail') {
-                $thumbnailPath = $media->getPath();
-            }
-
-            if ($media->getType()->getType() === 'image') {
-                $imagesPath[] = $media->getPath();
-            }
-            if ($media->getType()->getType() === 'video') {
-                $videosPath[] = $media->getPath();
-            }
-        }
-
-        $this->thumbnailPath  = $thumbnailPath ?? null;
-        $this->imagesPathList = $imagesPath ?? null;
-        $this->videosPathList = $videosPath ?? null;
     }
 }
