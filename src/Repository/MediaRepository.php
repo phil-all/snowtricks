@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Type;
 use App\Entity\Media;
 use App\Entity\Trick;
 use App\Repository\TypeRepository;
@@ -17,85 +18,106 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 class MediaRepository extends ServiceEntityRepository
 {
     /**
-     * @var TypeRepository
-     */
-    private TypeRepository $typeRepository;
-
-    /**
      * @var string
      */
     private string $uploadsDir;
 
+    /**
+     * MediaRepository constructor
+     *
+     * @param ManagerRegistry $registry
+     * @param string          $uploadsDir
+     */
     public function __construct(ManagerRegistry $registry, TypeRepository $typeRepository, string $uploadsDir)
     {
-        $this->typeRepository    = $typeRepository;
         $this->uploadsDir        = $uploadsDir;
 
         parent::__construct($registry, Media::class);
     }
 
     /**
-     * Add new trick thumbnail and delete the old one.
+     * Replace a trick media
      *
-     * @param Trick  $trick
-     * @param string $fileName
+     * @param Media       $media
+     * @param string|null $path
      *
      * @return void
      */
-    public function replaceThumbnail(Trick $trick, string $fileName)
+    public function replaceTrickMedia(Media $media, ?string $path): void
     {
-        $this->deleteCurrentThumbnail($trick);
-        $this->persistThumbnail($trick, $fileName);
+        /** @var Type $type */
+        $type = $media->getType();
+
+        /** @var Trick $trick */
+        $trick = $media->getTrick();
+
+        $this
+            ->deleteTrickMediaFile($media)
+            ->changeMediaPath($media, $path);
     }
 
     /**
-     * Delete the current trick thumbnail.
+     * Delete a trick media file
      *
-     * @param Trick $trick
+     * @param Media $media
      *
-     * @return void
+     * @return self
      */
-    public function deleteCurrentThumbnail(Trick $trick)
+    public function deleteTrickMediaFile(Media $media): self
     {
-        /** @var array $medias */
-        $medias = $trick->getMedia()->getValues();
+        /** @var string $fileToDelete */
+        $fileToDelete = $this->uploadsDir . '/' . $media->getPath();
 
-        /** @var  Media $media */
-        foreach ($medias as $key => $media) {
-            if ($media->getType()->getType() === 'thumbnail') {
-                $fileToDelete = $this->uploadsDir . '/' . $media->getPath();
+        $this->deleteFile($fileToDelete);
 
-                if (file_exists($fileToDelete)) {
-                    unlink($fileToDelete);
-                }
-
-                $this->_em->remove($media);
-                $this->_em->flush();
-            }
-        }
+        return $this;
     }
 
     /**
-     * Persist a new trick thumbnail in database.
+     * Change a media path
      *
-     * @param Trick  $trick
-     * @param string $fileName
+     * @param Media  $media
+     * @param string $path
      *
      * @return void
      */
-    public function persistThumbnail(Trick $trick, string $fileName)
+    public function changeMediaPath(Media $media, string $path): void
+    {
+        $media->setPath($path);
+    }
+
+    /**
+     * Create a trick media
+     *
+     * @param Type   $type
+     * @param Trick  $trick
+     * @param string $path
+     *
+     * @return void
+     */
+    public function createTrickMedia(Type $type, Trick $trick, string $path): void
     {
         $media = new Media();
 
-        $media->setType($this->typeRepository->findOneBy(['type' => 'thumbnail']));
-        $media->setTrick($trick);
-        $media->setPath($fileName);
+        $media->setType($type)->setTrick($trick)->setPath($path);
 
         $this->_em->persist($media);
         $this->_em->flush();
     }
 
-
+    /**
+     * Delete a file
+     *
+     * @param string $completeFilePath
+     *
+     * @return void
+     */
+    private function deleteFile(string $completeFilePath): void
+    {
+        if (file_exists($completeFilePath)) {
+            unlink($completeFilePath);
+        }
+    }
 
     // /**
     //  * @return Media[] Returns an array of Media objects
