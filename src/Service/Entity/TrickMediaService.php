@@ -4,7 +4,7 @@ namespace App\Service\Entity;
 
 use App\Entity\Media;
 use App\Entity\Trick;
-use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Used to help trick media management
@@ -31,15 +31,15 @@ class TrickMediaService
      *
      * @param string $type
      *
-     * @return Collection
+     * @return ArrayCollection
      */
-    public function getFilteredMediaCollection(string $type): Collection
+    public function getFilteredMediaCollection(string $type): ArrayCollection
     {
-        /** @var Collection $mediaCollection */
-        $mediaCollection = $this->trick->getMedia();
-
-        return $mediaCollection->filter(function (Media $media) use ($type) {
+        /** @var ArrayCollection $mediaCollection */
+        $mediaCollection =  $this->trick->getMedia()->filter(function (Media $media) use ($type) {
             return $media->getType()->getType() === $type;
         });
+
+        return new ArrayCollection($mediaCollection->getValues());
     }
 }
