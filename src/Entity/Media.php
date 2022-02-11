@@ -40,9 +40,14 @@ class Media
     private $user;
 
     /**
-     * @var UploadedFile
+     * @var UploadedFile|null
      */
-    private UploadedFile $file;
+    private ?UploadedFile $file = null;
+
+    /**
+     * @var string|null
+     */
+    private ?string $swapVideo = null;
 
     public function getId(): ?int
     {
@@ -54,7 +59,7 @@ class Media
         return $this->path;
     }
 
-    public function setPath(string $path): self
+    public function setPath(?string $path): self
     {
         $this->path = $path;
 
@@ -100,9 +105,9 @@ class Media
     /**
      * Get the value of file
      *
-     * @return  UploadedFile
+     * @return UploadedFile|null
      */
-    public function getFile()
+    public function getFile(): ?UploadedFile
     {
         return $this->file;
     }
@@ -114,9 +119,33 @@ class Media
      *
      * @return  self
      */
-    public function setFile(UploadedFile $file)
+    public function setFile(UploadedFile $file): self
     {
         $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of swapVideo
+     *
+     * @return string|null
+     */
+    public function getSwapVideo(): ?string
+    {
+        return $this->swapVideo;
+    }
+
+    /**
+     * Set the value of swapVideo
+     *
+     * @param  string  $swapVideo
+     *
+     * @return  self
+     */
+    public function setSwapVideo(string $swapVideo): self
+    {
+        $this->swapVideo = $swapVideo;
 
         return $this;
     }

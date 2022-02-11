@@ -70,14 +70,19 @@ class Trick
     private $media;
 
     /**
-     * @var Collection
+     * @var Media
      */
-    private Collection $image;
+    private Media $thumbnail;
 
     /**
      * @var Collection
      */
-    private Collection $video;
+    private Collection $images;
+
+    /**
+     * @var Collection
+     */
+    private Collection $videos;
 
     /**
      * @var TrickMediaService
@@ -88,9 +93,6 @@ class Trick
     {
         $this->media    = new ArrayCollection();
         $this->comments = new ArrayCollection();
-
-        $this->setImage();
-        $this->setVideo();
     }
 
     public function getId(): ?int
@@ -243,70 +245,75 @@ class Trick
     }
 
     /**
-     * Get image value
+     * Get the value of thumbnail
+     *
+     * @return  Media|null
+     */
+    public function getThumbnail(): ?Media
+    {
+        return $this->getOnceMediaService()->getFilteredMediaCollection('thumbnail')->first();
+    }
+
+    /**
+     * Set the value of thumbnail
+     *
+     * @param  Media  $thumbnail
+     *
+     * @return  self
+     */
+    public function setThumbnail(Media $thumbnail): self
+    {
+        $this->thumbnail = $thumbnail;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of image
      *
      * @return Collection
      */
-    public function getImage(): Collection
+    public function getImages(): Collection
     {
-        return $this->image;
+        return $this->getOnceMediaService()->getFilteredMediaCollection('image');
     }
 
     /**
-     * Get video value
+     * Set the value of images
+     *
+     * @param Collection $collection
+     *
+     * @return self
+     */
+    public function setImages(Collection $collection): self
+    {
+        $this->images = $collection;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of video
      *
      * @return Collection
      */
-    public function getVideo(): Collection
+    public function getVideos(): Collection
     {
-        return $this->video;
+        return  $this->getOnceMediaService()->getFilteredMediaCollection('video');
     }
 
     /**
-     * Set the value of image
-     */
-    private function setImage(): void
-    {
-        $this->image =  $this->getOnceMediaService()->getFilteredMediaCollection('image');
-    }
-
-    /**
-     * Set the value of video
-     */
-    private function setVideo(): void
-    {
-        $this->video =  $this->getOnceMediaService()->getFilteredMediaCollection('video');
-    }
-
-
-    /**
-     * Gets thumbnail path
+     * set the value of videos
      *
-     * @return string|null
-     */
-    public function getThumbnailPath(): ?string
-    {
-        return $this->getOnceMediaService()->getThumbnailPath();
-    }
-
-    /**
-     * Gets images path list
+     * @param Collection $collection
      *
-     * @return array|null
+     * @return self
      */
-    public function getImagesPathList(): ?array
+    public function setVideos(Collection $collection): self
     {
-        return $this->getOnceMediaService()->getImagesPathList();
-    }
+        $this->images = $collection;
 
-    /**
-     * Gets videos path list
-     *
-     * @return array|null
-     */
-    public function getVideosPathList(): ?array
-    {
-        return $this->getOnceMediaService()->getVideosPathList();
+        return $this;
     }
 
     /**
@@ -314,7 +321,7 @@ class Trick
      *
      * @return TrickMediaService
      */
-    private function getOnceMediaService(): TrickMediaService
+    public function getOnceMediaService(): TrickMediaService
     {
         $this->trickMediaService = $this->trickMediaService ?? new TrickMediaService($this);
 
