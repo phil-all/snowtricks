@@ -87,8 +87,8 @@ class TrickController extends AbstractController
 
             $mediaUpdaterService
                 ->replaceThumbnail($uploadedThumbnailFile, $thumbnail)
-                ->replaceAdditionnalImages($images)
-                ->replaceVideos($videos);
+                ->replaceAdditionnalImages($images, $trick)
+                ->replaceVideos($videos, $trick);
 
             $trickRepository->update($trick);
 

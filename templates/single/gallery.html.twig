@@ -1,13 +1,13 @@
 <section class="mt-5 container-fluid">
 	<div class="d-md-flex justify-content-center">
-		{% for imagePath in trick.imagesPathList %}
+		{% for image in trick.images %}
 			<div class="px-1 py-1">
-				<img src="{{ asset('uploads/') }}{{ imagePath }}" alt="{{ imagePath }}" width="320" height="208">
+				<img src="{{ asset('uploads/') ~ image.path }}" width="320" height="208">
 			</div>
 		{% endfor %}
-		{% for videoPath in trick.videosPathList %}
+		{% for video in trick.videos %}
 			<div class="px-1 py-1">
-				<iframe width="320" height="208" src="{{ videoPath }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+				<iframe width="320" height="208" src="{{ video.path }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 			</div>
 		{% endfor %}
 	</div>

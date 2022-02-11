@@ -44,12 +44,6 @@ class MediaRepository extends ServiceEntityRepository
      */
     public function replaceTrickMedia(Media $media, ?string $path): void
     {
-        /** @var Type $type */
-        $type = $media->getType();
-
-        /** @var Trick $trick */
-        $trick = $media->getTrick();
-
         $this
             ->deleteTrickMediaFile($media)
             ->changeMediaPath($media, $path);
@@ -113,7 +107,7 @@ class MediaRepository extends ServiceEntityRepository
      */
     private function deleteFile(string $completeFilePath): void
     {
-        if (file_exists($completeFilePath)) {
+        if (file_exists($completeFilePath) && !is_dir($completeFilePath)) {
             unlink($completeFilePath);
         }
     }

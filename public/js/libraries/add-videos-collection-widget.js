@@ -1,13 +1,3 @@
-const addVideoLink = document.createElement('b')
-addVideoLink.classList.add('add_video_list', 'btn', 'btn-primary')
-addVideoLink.innerText = 'Ajouter une url de video Youtube'
-addVideoLink.dataset.collectionHolderClass = 'videos'
-
-const newVideoLinkLi = document.createElement('li').append(addVideoLink)
-
-const videosCollectionHolder = document.querySelector('ul.videos')
-videosCollectionHolder.appendChild(addVideoLink)
-
 const addFormToVideosCollection = (e) => {
     const videosCollectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
 
@@ -24,6 +14,10 @@ const addFormToVideosCollection = (e) => {
     videosCollectionHolder.appendChild(item);
 
     videosCollectionHolder.dataset.index++;
-}
+};
 
-addVideoLink.addEventListener("click", addFormToVideosCollection)
+document
+    .querySelectorAll('.add_video_link')
+    .forEach(btn => {
+        btn.addEventListener("click", addFormToVideosCollection)
+    });

@@ -5,7 +5,8 @@
 {% block body %}
 	<div class="container">
 		<section class="my-5">
-			{{ form_start(updateForm) }}
+
+			{{ form_start(form) }}
 
 			{% include 'trick-update/form-sections/thumbnail.html.twig' %}
 
@@ -15,7 +16,7 @@
 
 			{% include 'trick-update/form-sections/form-buttons.html.twig' %}
 
-			{{ form_end(updateForm) }}
+			{{ form_end(form) }}
 		</section>
 	</div>
 {% endblock %}

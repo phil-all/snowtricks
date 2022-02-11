@@ -41,6 +41,7 @@ class EditTrickFormType extends AbstractType
                 'entry_type'    => ImageFormType::class,
                 'entry_options' => ['label' => false],
                 'allow_add'     => true,
+                'allow_delete'  => true,
                 'required'      => false,
                 'label'         => false,
             ])
@@ -48,6 +49,7 @@ class EditTrickFormType extends AbstractType
                 'entry_type'    => VideoFormType::class,
                 'entry_options' => ['label' => false],
                 'allow_add'     => true,
+                'allow_delete'  => true,
                 'required'      => false,
                 'label'         => false,
             ]);

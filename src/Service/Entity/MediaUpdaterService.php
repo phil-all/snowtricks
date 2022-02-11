@@ -2,9 +2,11 @@
 
 namespace App\Service\Entity;
 
+use App\Entity\Type;
 use App\Entity\Media;
 use App\Entity\Trick;
 use App\Service\Uploader;
+use App\Repository\TypeRepository;
 use App\Repository\MediaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -20,6 +22,11 @@ class MediaUpdaterService
     private Uploader $publicUploader;
 
     /**
+     * @var TypeRepository
+     */
+    private TypeRepository $typeRepository;
+
+    /**
      * @var MediaRepository
      */
     private MediaRepository $mediaRepository;
@@ -32,9 +39,11 @@ class MediaUpdaterService
      */
     public function __construct(
         Uploader $publicUploader,
+        TypeRepository $typeRepository,
         MediaRepository $mediaRepository
     ) {
         $this->publicUploader  = $publicUploader;
+        $this->typeRepository  = $typeRepository;
         $this->mediaRepository = $mediaRepository;
     }
 
@@ -62,14 +71,19 @@ class MediaUpdaterService
      *
      * @return self
      */
-    public function replaceAdditionnalImages(ArrayCollection $images): self
+    public function replaceAdditionnalImages(ArrayCollection $images, Trick $trick): self
     {
+        /** @var Media $image */
         foreach ($images as $image) {
             if (null !== $image->getFile()) {
                 /** @var UploadedFile $uploadedMediaFile*/
                 $uploadedMediaFile = $image->getFile();
 
-                $this->picturesProcess($uploadedMediaFile, $image);
+                if (null !== $image->getId()) {
+                    $this->picturesProcess($uploadedMediaFile, $image);
+                } else {
+                    $this->createAdditionnalImage($uploadedMediaFile, $trick);
+                }
             }
         }
 
@@ -83,14 +97,19 @@ class MediaUpdaterService
      *
      * @return self
      */
-    public function replaceVideos(ArrayCollection $videos): self
+    public function replaceVideos(ArrayCollection $videos, Trick $trick): self
     {
+        /** @var Media $video */
         foreach ($videos as $video) {
             if (null !== $video->getSwapVideo()) {
                 /** @var string $newVideoUrl*/
                 $newVideoUrl = $video->getSwapVideo();
 
-                $this->videoProcess($newVideoUrl, $video);
+                if (null !== $video->getId()) {
+                    $this->videoProcess($newVideoUrl, $video);
+                } else {
+                    $this->createVideo($trick, $newVideoUrl);
+                }
             }
         }
 
@@ -115,6 +134,26 @@ class MediaUpdaterService
     }
 
     /**
+     * Create an additionnal trick image
+     *
+     * @param UploadedFile|null $uploadedFile
+     * @param Trick             $trick
+     *
+     * @return void
+     */
+    private function createAdditionnalImage(?UploadedFile $uploadedFile, Trick $trick): void
+    {
+        if (null !== $uploadedFile) {
+            $this->publicUploader->uploadImage($uploadedFile);
+
+            /** @var Type $type */
+            $type = $this->typeRepository->findOneBy(['type' => 'image']);
+
+            $this->mediaRepository->createTrickMedia($type, $trick, $this->publicUploader->getNewFileName());
+        }
+    }
+
+    /**
      * Process videos update
      *
      * @param string|null $newVideoUrl
@@ -127,5 +166,13 @@ class MediaUpdaterService
         if (null !== $newVideoUrl) {
             $this->mediaRepository->replaceTrickMedia($media, $newVideoUrl);
         }
+    }
+
+    public function createVideo(Trick $trick, string $url)
+    {
+        /** @var Type $type */
+        $type = $this->typeRepository->findOneBy(['type' => 'video']);
+
+        $this->mediaRepository->createTrickMedia($type, $trick, $url);
     }
 }
