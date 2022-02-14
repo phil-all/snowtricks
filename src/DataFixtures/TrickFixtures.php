@@ -2,21 +2,21 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Trick;
 use DateTime;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Faker\Factory;
 use Faker\Generator;
+use App\Entity\Trick;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\String\Slugger\AsciiSlugger;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class TrickFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create('fr_FR');
-        $slugger = new AsciiSlugger();
+        $faker       = Factory::create('fr_FR');
+        $slugger     = new AsciiSlugger();
         $trickNumber = 0;
 
         for ($i = 1; $i <= $this->getCount('validUser'); $i++) {
@@ -27,7 +27,7 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
             if ($trickCount > 0) {
                 for ($j = 1; $j <= $trickCount; $j++) {
                     $trick = new Trick();
-                    $title = $faker->words(rand(1, 2), true);
+                    $title = $faker->unique()->words(rand(1, 2), true);
                     $create = $this->randomDate(10, 30, $faker);
                     $update = (rand(0, 1)) ? $this->randomDate(10, 30, $faker) : $create;
                     $randomCategory = rand(1, 5);
