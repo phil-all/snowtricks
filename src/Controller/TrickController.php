@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Media;
 use App\Entity\Trick;
 use App\Form\EditTrickFormType;
+use App\Form\CreateTrickFormType;
 use App\Repository\TrickRepository;
 use App\Repository\CategoryRepository;
+use App\Service\Entity\TrickInitService;
 use App\Service\Entity\MediaUpdaterService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,6 +54,7 @@ class TrickController extends AbstractController
 
     /**
      * @Route("/trick/modifier/{id}/{slug}", name="app_trick_update")
+     * @Route("/create", name="app_trick_create")
      *
      * @param Request              $request
      * @param Trick                $trick
@@ -59,17 +63,35 @@ class TrickController extends AbstractController
      *
      * @return Response
      */
-    public function update(
+    public function edit(
         Request $request,
-        Trick $trick,
+        //Trick $trick,
         TrickRepository $trickRepository,
         CategoryRepository $categoryRepository,
         MediaUpdaterService $mediaUpdaterService
     ): Response {
 
-        $form = $this->createForm(EditTrickFormType::class, $trick, [
-            'reorderedCategory' => $categoryRepository->onTopOfList($trick->getCategory()->getId()),
-        ]);
+        if ($request->attributes->get('_route') === 'app_trick_update') {
+            /** @var int $trickId */
+            $trickId = $request->attributes->get('_route_params')['id'];
+
+            $trick = $trickRepository->find($trickId);
+
+            $form = $this->createForm(EditTrickFormType::class, $trick, [
+                'reorderedCategory' => $categoryRepository->onTopOfList($trick->getCategory()->getId()),
+            ]);
+        }
+
+        if ($request->attributes->get('_route') === 'app_trick_create') {
+            /** @var User $user */
+            $user = $this->getUser();
+
+            /** @var Trick $trick */
+            $trick = (new TrickInitService())->setNew($user);
+
+            $form = $this->createForm(CreateTrickFormType::class, $trick);
+        }
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -85,19 +107,19 @@ class TrickController extends AbstractController
             /** @var ArrayCollection $videos */
             $videos = $form['videos']->getData();
 
+            $trickRepository->update($trick);
+
             $mediaUpdaterService
                 ->replaceThumbnail($uploadedThumbnailFile, $thumbnail)
                 ->replaceAdditionnalImages($images, $trick)
                 ->replaceVideos($videos, $trick);
 
-            $trickRepository->update($trick);
-
             return $this->redirectToRoute('app_home');
         }
 
         return $this->render('trick-update/index.html.twig', [
-            'trick'      => $trick,
-            'form' => $form->createView(),
+            'trick' => $trick,
+            'form'  => $form->createView(),
         ]);
     }
 }
