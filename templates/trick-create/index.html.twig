@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Nouveau trick' %}
+
+{% block body %}
+	<div class="container">
+		<section class="my-5">
+
+			{{ form_start(form) }}
+
+			{% include 'trick-create/form-sections/text-content.html.twig' %}
+
+			{% include 'trick-create/form-sections/thumbnail.html.twig' %}
+
+			{% include 'trick-create/form-sections/medias.html.twig' %}
+
+			{% include 'trick-create/form-sections/form-button.html.twig' %}
+
+			{{ form_end(form) }}
+		</section>
+	</div>
+{% endblock %}

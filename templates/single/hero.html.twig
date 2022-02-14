@@ -1,4 +1,9 @@
-<section style="height: 45vh; background-image: url('{{ asset('uploads/' ~ trick.thumbnail.path) }}');" class="center-image d-flex flex-column justify-content-around text-white">
+{% if trick.thumbnail == null %}
+	{% set thumbnailPath = 'img/default.jpg' %}
+{% else %}
+	{% set thumbnailPath = 'uploads/' ~ trick.thumbnail.path %}
+{% endif %}
+<section style="height: 45vh; background-image: url('{{ asset(thumbnailPath) }}');" class="center-image d-flex flex-column justify-content-around text-white">
 	<div class="text-center">
 		<h1>{{ trick.title|capitalize }}</h1>
 	</div>
