@@ -4,13 +4,11 @@ namespace App\Entity;
 
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\TypeRepository;
 use App\Repository\UserRepository;
 use App\Repository\TrickRepository;
-use App\Service\Entity\TrickService;
+use App\Service\Entity\TrickMediaService;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Proxies\__CG__\App\Entity\Trick as EntityTrick;
 
 /**
  * @ORM\Entity(repositoryClass=TrickRepository::class)
@@ -72,50 +70,29 @@ class Trick
     private $media;
 
     /**
-     * @var string
+     * @var Media
      */
-    private string $thumbnailPath;
+    private Media $thumbnail;
 
     /**
-     * @var array
+     * @var Collection
      */
-    private array $imagesPath;
+    private Collection $images;
 
     /**
-     * @var array
+     * @var Collection
      */
-    private array $videosPath;
+    private Collection $videos;
 
     /**
-     * @var TrickService
+     * @var TrickMediaService
      */
-    private TrickService $trickService;
+    private TrickMediaService $trickMediaService;
 
     public function __construct()
     {
-        $this->media         = new ArrayCollection();
-        $this->comments      = new ArrayCollection();
-        $this->thumbnailPath = $this->getMediaPath('thumbnail');
-    }
-
-    public function getThumbnailPath(): string
-    {
-        return $this->getMediaPath('thumbnail');
-    }
-
-    public function addThumbnailPath(): void
-    {
-        $this->thumbnailPath = $this->getMediaPath('thumbnail');
-    }
-
-    public function addImagesPath(): void
-    {
-        $this->imagesPath = $this->getMediaPath('image');
-    }
-
-    public function addVideosPath(): void
-    {
-        $this->videosPath = $this->getMediaPath('video');
+        $this->media    = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -245,30 +222,109 @@ class Trick
         return $this->media;
     }
 
-    public function addMedium(Media $medium): self
+    public function addMedia(Media $media): self
     {
-        if (!$this->media->contains($medium)) {
-            $this->media[] = $medium;
-            $medium->setTrick($this);
+        if (!$this->media->contains($media)) {
+            $this->media[] = $media;
+            $media->setTrick($this);
         }
 
         return $this;
     }
 
-    public function removeMedium(Media $medium): self
+    public function removeMedia(Media $media): self
     {
-        if ($this->media->removeElement($medium)) {
+        if ($this->media->removeElement($media)) {
             // set the owning side to null (unless already changed)
-            if ($medium->getTrick() === $this) {
-                $medium->setTrick(null);
+            if ($media->getTrick() === $this) {
+                $media->setTrick(null);
             }
         }
 
         return $this;
     }
 
-    private function getMediaPath(string $type): string|array
+    /**
+     * Get the value of thumbnail
+     *
+     * @return  Media|null
+     */
+    public function getThumbnail(): ?Media
     {
-        return (new TrickService())->findMediaPath($this->media, $type);
+        return $this->getOnceMediaService()->getFilteredMediaCollection('thumbnail')->first();
+    }
+
+    /**
+     * Set the value of thumbnail
+     *
+     * @param  Media  $thumbnail
+     *
+     * @return  self
+     */
+    public function setThumbnail(Media $thumbnail): self
+    {
+        $this->thumbnail = $thumbnail;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of image
+     *
+     * @return Collection
+     */
+    public function getImages(): Collection
+    {
+        return $this->getOnceMediaService()->getFilteredMediaCollection('image');
+    }
+
+    /**
+     * Set the value of images
+     *
+     * @param Collection $collection
+     *
+     * @return self
+     */
+    public function setImages(Collection $collection): self
+    {
+        $this->images = $collection;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of video
+     *
+     * @return Collection
+     */
+    public function getVideos(): Collection
+    {
+        return  $this->getOnceMediaService()->getFilteredMediaCollection('video');
+    }
+
+    /**
+     * set the value of videos
+     *
+     * @param Collection $collection
+     *
+     * @return self
+     */
+    public function setVideos(Collection $collection): self
+    {
+        $this->images = $collection;
+
+        return $this;
+    }
+
+    /**
+     * Sets once TrickMediaService
+     *
+     * @return TrickMediaService
+     */
+    public function getOnceMediaService(): TrickMediaService
+    {
+        $this->trickMediaService = $this->trickMediaService ?? new TrickMediaService($this);
+
+        return $this->trickMediaService;
     }
 }

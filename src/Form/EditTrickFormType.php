@@ -8,10 +8,12 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
-class UpdateTrickFormType extends AbstractType
+class EditTrickFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -29,6 +31,27 @@ class UpdateTrickFormType extends AbstractType
                 'choice_label' => 'category',
                 'choice_value' => 'id',
                 'choices'      => $cat,
+            ])
+            ->add('thumbnail', FileType::class, [
+                'mapped'   => false,
+                'required' => false,
+                'label'    => false,
+            ])
+            ->add('images', CollectionType::class, [
+                'entry_type'    => ImageFormType::class,
+                'entry_options' => ['label' => false],
+                'allow_add'     => true,
+                'allow_delete'  => true,
+                'required'      => false,
+                'label'         => false,
+            ])
+            ->add('videos', CollectionType::class, [
+                'entry_type'    => VideoFormType::class,
+                'entry_options' => ['label' => false],
+                'allow_add'     => true,
+                'allow_delete'  => true,
+                'required'      => false,
+                'label'         => false,
             ]);
     }
 

@@ -1,15 +1,14 @@
 <section class="mt-5 container-fluid">
 	<div class="d-md-flex justify-content-center">
-		{% for media in trick.media.values %}
-			{% if media.type.type == 'image' %}
-				<div class="px-1 py-1">
-					<img src="{{ asset('images/') }}{{ media.file }}" alt="{{ media.file }}" width="320" height="208">
-				</div>
-			{% elseif media.type.type == 'video' %}
-				<div class="px-1 py-1">
-					<iframe width="320" height="208" src="{{ media.file }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-				</div>
-			{% endif %}
+		{% for image in trick.images %}
+			<div class="px-1 py-1">
+				<img src="{{ asset('uploads/') ~ image.path }}" width="320" height="208">
+			</div>
+		{% endfor %}
+		{% for video in trick.videos %}
+			<div class="px-1 py-1">
+				<iframe width="320" height="208" src="{{ video.path }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			</div>
 		{% endfor %}
 	</div>
 </section>

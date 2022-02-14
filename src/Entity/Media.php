@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\MediaRepository;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity(repositoryClass=MediaRepository::class)
@@ -20,10 +21,10 @@ class Media
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $file;
+    private $path;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="media")
+     * @ORM\ManyToOne(targetEntity=Type::class, fetch="EAGER", inversedBy="media")
      * @ORM\JoinColumn(nullable=false)
      */
     private $type;
@@ -38,19 +39,29 @@ class Media
      */
     private $user;
 
+    /**
+     * @var UploadedFile|null
+     */
+    private ?UploadedFile $file = null;
+
+    /**
+     * @var string|null
+     */
+    private ?string $swapVideo = null;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getFile(): ?string
+    public function getPath(): ?string
     {
-        return $this->file;
+        return $this->path;
     }
 
-    public function setFile(string $file): self
+    public function setPath(?string $path): self
     {
-        $this->file = $file;
+        $this->path = $path;
 
         return $this;
     }
@@ -87,6 +98,54 @@ class Media
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of file
+     *
+     * @return UploadedFile|null
+     */
+    public function getFile(): ?UploadedFile
+    {
+        return $this->file;
+    }
+
+    /**
+     * Set the value of file
+     *
+     * @param  UploadedFile  $file
+     *
+     * @return  self
+     */
+    public function setFile(UploadedFile $file): self
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of swapVideo
+     *
+     * @return string|null
+     */
+    public function getSwapVideo(): ?string
+    {
+        return $this->swapVideo;
+    }
+
+    /**
+     * Set the value of swapVideo
+     *
+     * @param  string  $swapVideo
+     *
+     * @return  self
+     */
+    public function setSwapVideo(string $swapVideo): self
+    {
+        $this->swapVideo = $swapVideo;
 
         return $this;
     }

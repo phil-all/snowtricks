@@ -2,13 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Media;
 use App\Entity\Trick;
-use App\Form\UpdateTrickFormType;
+use App\Form\EditTrickFormType;
+use App\Repository\TrickRepository;
+use App\Repository\CategoryRepository;
+use App\Service\Entity\MediaUpdaterService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\TrickRepository as TrickRepo;
-use App\Repository\CategoryRepository as CatRepo;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -20,14 +24,14 @@ class TrickController extends AbstractController
     /**
      * @Route("/", name="app_home")
      *
-     * @param TrickRepo $trickRepo
+     * @param TrickRepository $trickRepository
      *
      * @return Response
      */
-    public function index(TrickRepo $trickRepo): Response
+    public function index(TrickRepository $trickRepository): Response
     {
         return $this->render('home/index.html.twig', [
-            'tricks' => $trickRepo->findAll()
+            'tricks' => $trickRepository->findAll()
         ]);
     }
 
@@ -40,8 +44,6 @@ class TrickController extends AbstractController
      */
     public function read(Trick $trick): Response
     {
-        $trick->addThumbnailPath();
-
         return $this->render('single/index.html.twig', [
             'trick' => $trick
         ]);
@@ -50,33 +52,52 @@ class TrickController extends AbstractController
     /**
      * @Route("/trick/modifier/{id}/{slug}", name="app_trick_update")
      *
-     * @param Request   $request
-     * @param Trick     $trick
-     * @param CatRepo   $category
-     * @param TrickRepo $trickRepo
+     * @param Request              $request
+     * @param Trick                $trick
+     * @param CategoryRepository   $categoryRepository
+     * @param TrickRepository      $trickRepository
      *
      * @return Response
      */
-    public function update(Request $request, Trick $trick, CatRepo $category, TrickRepo $trickRepo): Response
-    {
-        $form = $this->createForm(UpdateTrickFormType::class, $trick, [
-            'reorderedCategory' => $category->onTopOfList($trick->getCategory()->getId()),
+    public function update(
+        Request $request,
+        Trick $trick,
+        TrickRepository $trickRepository,
+        CategoryRepository $categoryRepository,
+        MediaUpdaterService $mediaUpdaterService
+    ): Response {
+
+        $form = $this->createForm(EditTrickFormType::class, $trick, [
+            'reorderedCategory' => $categoryRepository->onTopOfList($trick->getCategory()->getId()),
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $trickRepo->update($trick);
+            /** @var UploadedFile $uploadedThumbnailFile */
+            $uploadedThumbnailFile = $form['thumbnail']->getData();
+
+            /** @var Media $thumbnail */
+            $thumbnail = $trick->getThumbnail();
+
+            /** @var ArrayCollection $images */
+            $images = $form['images']->getData();
+
+            /** @var ArrayCollection $videos */
+            $videos = $form['videos']->getData();
+
+            $mediaUpdaterService
+                ->replaceThumbnail($uploadedThumbnailFile, $thumbnail)
+                ->replaceAdditionnalImages($images, $trick)
+                ->replaceVideos($videos, $trick);
+
+            $trickRepository->update($trick);
 
             return $this->redirectToRoute('app_home');
         }
 
-        $trick->addThumbnailPath();
-        $trick->addImagesPath();
-        $trick->addVideosPath();
-
         return $this->render('trick-update/index.html.twig', [
             'trick'      => $trick,
-            'updateForm' => $form->createView(),
+            'form' => $form->createView(),
         ]);
     }
 }
