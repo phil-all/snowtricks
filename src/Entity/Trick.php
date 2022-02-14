@@ -26,7 +26,7 @@ class Trick
     private $id;
 
     /**
-     *  @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $title;
 
@@ -254,7 +254,10 @@ class Trick
      */
     public function getThumbnail(): ?Media
     {
-        return $this->getOnceMediaService()->getFilteredMediaCollection('thumbnail')->first();
+        /** @var Media|false */
+        $thumbnail =  $this->getOnceMediaService()->getFilteredMediaCollection('thumbnail')->first();
+
+        return (!$thumbnail) ? null : $thumbnail;
     }
 
     /**

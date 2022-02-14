@@ -30,7 +30,7 @@ class Media
     private $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="media")
+     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="media", cascade={"persist"})
      */
     private $trick;
 
