@@ -46,7 +46,7 @@ class MediaRepository extends ServiceEntityRepository
     {
         $this
             ->deleteTrickMediaFile($media)
-            ->changeMediaPath($media, $path);
+            ->setMediaPath($media, $path);
     }
 
     /**
@@ -58,23 +58,25 @@ class MediaRepository extends ServiceEntityRepository
      */
     public function deleteTrickMediaFile(Media $media): self
     {
-        /** @var string $fileToDelete */
-        $fileToDelete = $this->uploadsDir . '/' . $media->getPath();
+        if (null !== $media->getId()) {
+            /** @var string $fileToDelete */
+            $fileToDelete = $this->uploadsDir . '/' . $media->getPath();
 
-        $this->deleteFile($fileToDelete);
+            $this->deleteFile($fileToDelete);
+        }
 
         return $this;
     }
 
     /**
-     * Change a media path
+     * set a media path
      *
      * @param Media  $media
      * @param string $path
      *
      * @return void
      */
-    public function changeMediaPath(Media $media, string $path): void
+    public function setMediaPath(Media $media, string $path): void
     {
         $media->setPath($path);
     }
