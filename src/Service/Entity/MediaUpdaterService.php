@@ -51,13 +51,20 @@ class MediaUpdaterService
      * Replace a trick thumbnail
      *
      * @param UploadedFile|null $uploadedFile
-     * @param Media             $media
+     * @param Media|null        $media
      *
      * @return self
      */
-    public function replaceThumbnail(?UploadedFile $uploadedFile, Media $media): self
+    public function replaceThumbnail(?UploadedFile $uploadedFile, ?Media $media): self
     {
         if (null !== $uploadedFile) {
+            if (null === $media) {
+                /** @var Type $type */
+                $type = $this->typeRepository->findOneBy(['type' => 'thumbnail']);
+
+                $media = (new Media())->setType($type);
+            }
+
             $this->picturesProcess($uploadedFile, $media);
         }
 
