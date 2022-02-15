@@ -3,6 +3,9 @@
 		<button class="btn btn-lg btn-primary" type="submit">Sauvegarder les modifications</button>
 	</div>
 	<div class="col d-flex justify-content-end">
-		<button class="btn btn-lg btn-primary">Supprimer le trick</button>
+		<a href="{{ path('app_trick_delete', {"id": trick.id, "slug": trick.slug}) }}" class="btn btn-lg btn-primary">
+			Supprimer le trick
+		</a>
 	</div>
 </div>
+{{ dump(trick) }}
