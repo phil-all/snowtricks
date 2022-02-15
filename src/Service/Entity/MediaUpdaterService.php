@@ -110,7 +110,7 @@ class MediaUpdaterService
         foreach ($videos as $video) {
             if (null !== $video->getSwapVideo()) {
                 /** @var string $newVideoUrl*/
-                $newVideoUrl = $video->getSwapVideo();
+                $newVideoUrl = $this->embedYoutubeLink($video->getSwapVideo());
 
                 if (null !== $video->getId()) {
                     $this->videoProcess($newVideoUrl, $video);
@@ -181,5 +181,31 @@ class MediaUpdaterService
         $type = $this->typeRepository->findOneBy(['type' => 'video']);
 
         $this->mediaRepository->createTrickMedia($type, $trick, $url);
+    }
+
+    /**
+     * Get an emebd youtube link from a given url
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    private function embedYoutubeLink(string $url): string
+    {
+        // clean url begining
+        $firstFilter = preg_replace(
+            '/(^http(?:s?):\/\/(?:(www\.)*youtu(?:be\.com\/watch\?v=|\.be\/)))/',
+            '',
+            $url
+        );
+
+        // clean url end
+        $secondFilter = preg_replace(
+            '/(&(.*))/',
+            '',
+            $firstFilter
+        );
+
+        return 'http://www.youtube.com/embed/' . $secondFilter;
     }
 }
