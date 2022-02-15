@@ -3,18 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\Media;
 use App\Entity\Trick;
 use App\Form\EditTrickFormType;
 use App\Form\CreateTrickFormType;
 use App\Repository\TrickRepository;
+use App\Service\Entity\TrickService;
 use App\Repository\CategoryRepository;
-use App\Service\Entity\TrickInitService;
 use App\Service\Entity\MediaUpdaterService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -64,6 +64,7 @@ class TrickController extends AbstractController
      */
     public function edit(
         Request $request,
+        TrickService $trickService,
         TrickRepository $trickRepository,
         CategoryRepository $categoryRepository,
         MediaUpdaterService $mediaUpdaterService
@@ -73,7 +74,7 @@ class TrickController extends AbstractController
         $user = $this->getUser();
 
         /** @var Trick $trick */
-        $trick = (new TrickInitService())->setNew($user);
+        $trick = $trickService->setNew($user);
 
         $form = $this->createForm(CreateTrickFormType::class, $trick);
 
@@ -116,5 +117,17 @@ class TrickController extends AbstractController
             'trick' => $trick,
             'form'  => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/trick/delete/{id}/{slug}", name="app_trick_delete")
+     *
+     * @return RedirectResponse
+     */
+    public function delete(Trick $trick, TrickService $trickService): RedirectResponse
+    {
+        $trickService->delete($trick);
+
+        return $this->redirectToRoute('app_home');
     }
 }
