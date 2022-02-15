@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Type;
 use App\Entity\Media;
 use App\Entity\Trick;
+use App\Service\Eraser;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
@@ -22,14 +23,21 @@ class MediaRepository extends ServiceEntityRepository
     private string $uploadsDir;
 
     /**
+     * @var Eraser
+     */
+    private Eraser $eraser;
+
+    /**
      * MediaRepository constructor
      *
      * @param ManagerRegistry $registry
+     * @param Eraser          $eraser
      * @param string          $uploadsDir
      */
-    public function __construct(ManagerRegistry $registry, string $uploadsDir)
+    public function __construct(ManagerRegistry $registry, Eraser $eraser, string $uploadsDir)
     {
-        $this->uploadsDir        = $uploadsDir;
+        $this->eraser     = $eraser;
+        $this->uploadsDir = $uploadsDir;
 
         parent::__construct($registry, Media::class);
     }
@@ -50,6 +58,21 @@ class MediaRepository extends ServiceEntityRepository
     }
 
     /**
+     * Delete a media and its file
+     *
+     * @param Media $media
+     *
+     * @return void
+     */
+    public function deleteMedia(Media $media): void
+    {
+        $this->deleteTrickMediaFile($media);
+
+        $this->_em->remove($media);
+        $this->_em->flush();
+    }
+
+    /**
      * Delete a trick media file
      *
      * @param Media $media
@@ -59,26 +82,10 @@ class MediaRepository extends ServiceEntityRepository
     public function deleteTrickMediaFile(Media $media): self
     {
         if (null !== $media->getId()) {
-            /** @var string $fileToDelete */
-            $fileToDelete = $this->uploadsDir . '/' . $media->getPath();
-
-            $this->deleteFile($fileToDelete);
+            $this->eraser->deleteFile($this->getCompleteFilePath($media));
         }
 
         return $this;
-    }
-
-    /**
-     * set a media path
-     *
-     * @param Media  $media
-     * @param string $path
-     *
-     * @return void
-     */
-    public function setMediaPath(Media $media, string $path): void
-    {
-        $media->setPath($path);
     }
 
     /**
@@ -101,17 +108,28 @@ class MediaRepository extends ServiceEntityRepository
     }
 
     /**
-     * Delete a file
+     * set a media path
      *
-     * @param string $completeFilePath
+     * @param Media  $media
+     * @param string $path
      *
      * @return void
      */
-    private function deleteFile(string $completeFilePath): void
+    private function setMediaPath(Media $media, string $path): void
     {
-        if (file_exists($completeFilePath) && !is_dir($completeFilePath)) {
-            unlink($completeFilePath);
-        }
+        $media->setPath($path);
+    }
+
+    /**
+     * Get the complete path of a Media file
+     *
+     * @param Media $media
+     *
+     * @return string
+     */
+    private function getCompleteFilePath(Media $media): string
+    {
+        return $this->uploadsDir . '/' . $media->getPath();
     }
 
     // /**
