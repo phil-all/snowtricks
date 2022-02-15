@@ -9,6 +9,7 @@ use App\Service\Uploader;
 use App\Repository\TypeRepository;
 use App\Repository\MediaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -32,6 +33,11 @@ class MediaUpdaterService
     private MediaRepository $mediaRepository;
 
     /**
+     * @var Trick
+     */
+    private Trick $trick;
+
+    /**
      * MediaUpdaterService constructor.
      *
      * @param Uploader        $publicUploader
@@ -47,38 +53,44 @@ class MediaUpdaterService
         $this->mediaRepository = $mediaRepository;
     }
 
+    public function defineTrick(Trick $trick): self
+    {
+        if (null === $trick->getSlug()) {
+            $trick->setSlug((new AsciiSlugger())->slug($trick->getTitle(), '-'));
+        }
+
+        $this->trick = $trick;
+
+        return $this;
+    }
+
     /**
-     * Replace a trick thumbnail
+     * Set a trick thumbnail
      *
      * @param UploadedFile|null $uploadedFile
-     * @param Media|null        $media
      *
      * @return self
      */
-    public function replaceThumbnail(?UploadedFile $uploadedFile, ?Media $media): self
+    public function setThumbnail(?UploadedFile $uploadedFile): self
     {
         if (null !== $uploadedFile) {
-            if (null === $media) {
-                /** @var Type $type */
-                $type = $this->typeRepository->findOneBy(['type' => 'thumbnail']);
+            /** @var Media $thumbnail */
+            $thumbnail = $this->trick->getThumbnail();
 
-                $media = (new Media())->setType($type);
-            }
-
-            $this->picturesProcess($uploadedFile, $media);
+            $this->picturesProcess($uploadedFile, $thumbnail);
         }
 
         return $this;
     }
 
     /**
-     * Replace trick additionnal images
+     * Set trick additionnal images
      *
      * @param ArrayCollection $images
      *
      * @return self
      */
-    public function replaceAdditionnalImages(ArrayCollection $images, Trick $trick): self
+    public function setAdditionnalImages(ArrayCollection $images): self
     {
         /** @var Media $image */
         foreach ($images as $image) {
@@ -89,7 +101,7 @@ class MediaUpdaterService
                 if (null !== $image->getId()) {
                     $this->picturesProcess($uploadedMediaFile, $image);
                 } else {
-                    $this->createAdditionnalImage($uploadedMediaFile, $trick);
+                    $this->createAdditionnalImage($uploadedMediaFile);
                 }
             }
         }
@@ -98,13 +110,13 @@ class MediaUpdaterService
     }
 
     /**
-     * Replace trick videos
+     * Set trick videos
      *
      * @param ArrayCollection $videos
      *
      * @return self
      */
-    public function replaceVideos(ArrayCollection $videos, Trick $trick): self
+    public function setVideos(ArrayCollection $videos): self
     {
         /** @var Media $video */
         foreach ($videos as $video) {
@@ -115,7 +127,7 @@ class MediaUpdaterService
                 if (null !== $video->getId()) {
                     $this->videoProcess($newVideoUrl, $video);
                 } else {
-                    $this->createVideo($trick, $newVideoUrl);
+                    $this->createVideo($newVideoUrl);
                 }
             }
         }
@@ -127,16 +139,26 @@ class MediaUpdaterService
      * Process pictures update
      *
      * @param UploadedFile|null $uploadedFile
-     * @param Media             $media
+     * @param Media|null        $media
      *
      * @return void
      */
-    private function picturesProcess(?UploadedFile $uploadedFile, Media $media): void
+    private function picturesProcess(?UploadedFile $uploadedFile, ?Media $media): void
     {
         if (null !== $uploadedFile) {
             $this->publicUploader->uploadImage($uploadedFile);
 
-            $this->mediaRepository->replaceTrickMedia($media, $this->publicUploader->getNewFileName());
+            if (null === $media) {
+                /** @var Type $type */
+                $type = $this->typeRepository->findOneBy(['type' => 'thumbnail']);
+
+                /** @var string $path */
+                $path = $this->publicUploader->getNewFileName();
+
+                $this->mediaRepository->createTrickMedia($type, $this->trick, $path);
+            } else {
+                $this->mediaRepository->replaceTrickMedia($media, $this->publicUploader->getNewFileName());
+            }
         }
     }
 
@@ -144,11 +166,10 @@ class MediaUpdaterService
      * Create an additionnal trick image
      *
      * @param UploadedFile|null $uploadedFile
-     * @param Trick             $trick
      *
      * @return void
      */
-    private function createAdditionnalImage(?UploadedFile $uploadedFile, Trick $trick): void
+    private function createAdditionnalImage(?UploadedFile $uploadedFile): void
     {
         if (null !== $uploadedFile) {
             $this->publicUploader->uploadImage($uploadedFile);
@@ -156,7 +177,10 @@ class MediaUpdaterService
             /** @var Type $type */
             $type = $this->typeRepository->findOneBy(['type' => 'image']);
 
-            $this->mediaRepository->createTrickMedia($type, $trick, $this->publicUploader->getNewFileName());
+            /** @var string $path */
+            $path = $this->publicUploader->getNewFileName();
+
+            $this->mediaRepository->createTrickMedia($type, $this->trick, $path);
         }
     }
 
@@ -175,12 +199,12 @@ class MediaUpdaterService
         }
     }
 
-    public function createVideo(Trick $trick, string $url)
+    private function createVideo(string $url)
     {
         /** @var Type $type */
         $type = $this->typeRepository->findOneBy(['type' => 'video']);
 
-        $this->mediaRepository->createTrickMedia($type, $trick, $url);
+        $this->mediaRepository->createTrickMedia($type, $this->trick, $url);
     }
 
     /**

@@ -57,7 +57,6 @@ class TrickController extends AbstractController
      * @Route("/create", name="app_trick_create")
      *
      * @param Request              $request
-     * @param Trick                $trick
      * @param CategoryRepository   $categoryRepository
      * @param TrickRepository      $trickRepository
      *
@@ -65,31 +64,29 @@ class TrickController extends AbstractController
      */
     public function edit(
         Request $request,
-        //Trick $trick,
         TrickRepository $trickRepository,
         CategoryRepository $categoryRepository,
         MediaUpdaterService $mediaUpdaterService
     ): Response {
 
+        /** @var User $user */
+        $user = $this->getUser();
+
+        /** @var Trick $trick */
+        $trick = (new TrickInitService())->setNew($user);
+
+        $form = $this->createForm(CreateTrickFormType::class, $trick);
+
         if ($request->attributes->get('_route') === 'app_trick_update') {
             /** @var int $trickId */
             $trickId = $request->attributes->get('_route_params')['id'];
 
+            /** @var Trick $trick */
             $trick = $trickRepository->find($trickId);
 
             $form = $this->createForm(EditTrickFormType::class, $trick, [
                 'reorderedCategory' => $categoryRepository->onTopOfList($trick->getCategory()->getId()),
             ]);
-        }
-
-        if ($request->attributes->get('_route') === 'app_trick_create') {
-            /** @var User $user */
-            $user = $this->getUser();
-
-            /** @var Trick $trick */
-            $trick = (new TrickInitService())->setNew($user);
-
-            $form = $this->createForm(CreateTrickFormType::class, $trick);
         }
 
         $form->handleRequest($request);
@@ -98,21 +95,19 @@ class TrickController extends AbstractController
             /** @var UploadedFile $uploadedThumbnailFile */
             $uploadedThumbnailFile = $form['thumbnail']->getData();
 
-            /** @var Media $thumbnail */
-            $thumbnail = $trick->getThumbnail();
-
             /** @var ArrayCollection $images */
             $images = $form['images']->getData();
 
             /** @var ArrayCollection $videos */
             $videos = $form['videos']->getData();
 
-            $trickRepository->update($trick);
-
             $mediaUpdaterService
-                ->replaceThumbnail($uploadedThumbnailFile, $thumbnail)
-                ->replaceAdditionnalImages($images, $trick)
-                ->replaceVideos($videos, $trick);
+                ->defineTrick($trick)
+                ->setThumbnail($uploadedThumbnailFile)
+                ->setAdditionnalImages($images)
+                ->setVideos($videos);
+
+            $trickRepository->update($trick);
 
             return $this->redirectToRoute('app_home');
         }
