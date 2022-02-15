@@ -70,6 +70,8 @@ class TrickController extends AbstractController
         MediaUpdaterService $mediaUpdaterService
     ): Response {
 
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         /** @var User $user */
         $user = $this->getUser();
 
@@ -126,6 +128,8 @@ class TrickController extends AbstractController
      */
     public function delete(Trick $trick, TrickService $trickService): RedirectResponse
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $trickService->delete($trick);
 
         return $this->redirectToRoute('app_home');
