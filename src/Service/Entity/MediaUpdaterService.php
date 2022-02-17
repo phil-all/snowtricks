@@ -65,13 +65,32 @@ class MediaUpdaterService
     }
 
     /**
+     * Update trick Medias from form datas
+     *
+     * @param ArrayCollection $formImages
+     * @param ArrayCollection $formVideos
+     *
+     * @return void
+     */
+    public function updateMedias(
+        ?UploadedFile $formThumbnail,
+        ArrayCollection $formImages,
+        ArrayCollection $formVideos
+    ): void {
+        $this->setThumbnail($formThumbnail)
+            ->deleteImagesAndVideos($formImages, $formVideos)
+            ->setAdditionnalImages($formImages)
+            ->setVideos($formVideos);
+    }
+
+    /**
      * Set a trick thumbnail
      *
      * @param UploadedFile|null $uploadedFile
      *
      * @return self
      */
-    public function setThumbnail(?UploadedFile $uploadedFile): self
+    private function setThumbnail(?UploadedFile $uploadedFile): self
     {
         if (null !== $uploadedFile) {
             /** @var Media $thumbnail */
@@ -83,23 +102,51 @@ class MediaUpdaterService
         return $this;
     }
 
+    private function deleteImagesAndVideos(ArrayCollection $formImages, ArrayCollection $formVideos): self
+    {
+        /** @var array $trickImagesAndVideos */
+        $trickImagesAndVideos = array_merge(
+            $this->trick->getImages()->toArray(),
+            $this->trick->getVideos()->toArray()
+        );
+
+        /** @var array $formImagesAndVideos */
+        $formImagesAndVideos = array_merge(
+            $formImages->toArray(),
+            $formVideos->toArray()
+        );
+
+        /** @var array $mediasToDelete */
+        $mediasToDelete = array_diff(
+            $trickImagesAndVideos,
+            $formImagesAndVideos
+        );
+
+        /** @var Media $media */
+        foreach ($mediasToDelete as $media) {
+            $this->mediaRepository->deleteMedia($media);
+        }
+
+        return $this;
+    }
+
     /**
      * Set trick additionnal images
      *
-     * @param ArrayCollection $images
+     * @param ArrayCollection $formImages
      *
      * @return self
      */
-    public function setAdditionnalImages(ArrayCollection $images): self
+    private function setAdditionnalImages(ArrayCollection $formImages): self
     {
-        /** @var Media $image */
-        foreach ($images as $image) {
-            if (null !== $image->getFile()) {
+        /** @var Media $media */
+        foreach ($formImages as $media) {
+            if (null !== $media->getFile()) {
                 /** @var UploadedFile $uploadedMediaFile*/
-                $uploadedMediaFile = $image->getFile();
+                $uploadedMediaFile = $media->getFile();
 
-                if (null !== $image->getId()) {
-                    $this->picturesProcess($uploadedMediaFile, $image);
+                if (null !== $media->getId()) {
+                    $this->picturesProcess($uploadedMediaFile, $media);
                 } else {
                     $this->createAdditionnalImage($uploadedMediaFile);
                 }
@@ -112,20 +159,20 @@ class MediaUpdaterService
     /**
      * Set trick videos
      *
-     * @param ArrayCollection $videos
+     * @param ArrayCollection $formVideos
      *
      * @return self
      */
-    public function setVideos(ArrayCollection $videos): self
+    private function setVideos(ArrayCollection $formVideos): self
     {
-        /** @var Media $video */
-        foreach ($videos as $video) {
-            if (null !== $video->getSwapVideo()) {
+        /** @var Media $media */
+        foreach ($formVideos as $media) {
+            if (null !== $media->getSwapVideo()) {
                 /** @var string $newVideoUrl*/
-                $newVideoUrl = $this->embedYoutubeLink($video->getSwapVideo());
+                $newVideoUrl = $this->embedYoutubeLink($media->getSwapVideo());
 
-                if (null !== $video->getId()) {
-                    $this->videoProcess($newVideoUrl, $video);
+                if (null !== $media->getId()) {
+                    $this->videoProcess($newVideoUrl, $media);
                 } else {
                     $this->createVideo($newVideoUrl);
                 }
