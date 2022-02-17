@@ -317,7 +317,7 @@ class Trick
      */
     public function setVideos(Collection $collection): self
     {
-        $this->images = $collection;
+        $this->videos = $collection;
 
         return $this;
     }
