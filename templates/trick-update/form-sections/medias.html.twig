@@ -1,60 +1,10 @@
-<ul class="images list-unstyled list-inline" data-index="{{ form.images.vars.data|length > 0 ? form.images.vars.data|length : 0 }}" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}">
-	{% for image in form.images %}
-		<li class="list-inline-item col-md-3">
-			<div class="card text-white card-has-bg click-col center-image" style="height: 220px; background-image: url('{{ asset('uploads/' ~ image.vars.data.path) }}')">
-				<div class="card-img-overlay d-flex flex-column">
-					<div class="card-body">
-						{{ form_row(image.file) }}
-					</div>
-				</div>
-			</div>
-		</li>
-	{% endfor %}
-	<li class="list-inline-item col-md-3">
-		<div class="card" style="height: 220px">
-			<div class="card-img-overlay d-flex flex-column">
-				<div class="card-body d-flex justify-content-center align-items-center">
-					<div>
-						<button type="button" class="add_image_link btn rounded-pill btn-lg  btn-success" data-collection-holder-class="images">
-							<span class="text-light">
-								<i class="bi bi-plus-circle-fill"></i>
-							</span>
-							Add image
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</li>
-</ul>
+<hr class="my-3">
 
-<ul class="videos list-unstyled list-inline" data-index="{{ form.videos|length > 0 ? form.videos.vars.data|length : 0 }}" data-prototype="{{ form_widget(form.videos.vars.prototype)|e('html_attr') }}">
-	{% for video in form.videos %}
-		<li class="list-inline-item col-md-3">
-			<div class="bg-black">
-				<div class="card-body p-1">
-					{{ form_widget(video.swapVideo) }}
-				</div>
-				<div class="px-1 py-1">
-					<iframe width="320" height="208" src="{{ video.vars.data.path }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-				</div>
-			</div>
-		</li>
-	{% endfor %}
-	<li class="list-inline-item col-md-3">
-		<div class="card" style="height: 220px">
-			<div class="card-img-overlay d-flex flex-column">
-				<div class="card-body d-flex justify-content-center align-items-center">
-					<div>
-						<button type="button" class="add_video_link btn rounded-pill btn-lg  btn-success" data-collection-holder-class="videos">
-							<span class="text-light">
-								<i class="bi bi-plus-circle-fill"></i>
-							</span>
-							Add video
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</li>
-</ul>
+{% include 'trick-update/form-sections/medias-images-part.html.twig' %}
+
+<hr class="my-3">
+
+{% include 'trick-update/form-sections/medias-videos-part.html.twig' %}
+
+<hr class="my-3">
+

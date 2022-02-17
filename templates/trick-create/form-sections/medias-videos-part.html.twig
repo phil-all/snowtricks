@@ -1,0 +1,11 @@
+<div class="col-12 pb-3">
+	<p>Vidéos</p>
+	<button type="button" class="btn btn-primary btn-new" data-collection="#videos">Nouvelle vidéos</button>
+	<div
+		id="videos"
+		class="row"
+		data-prototype="{{ include('trick-form-prototypes/videos-prototype.html.twig', { form: form.videos.vars.prototype })|e('html_attr') }}"
+		data-index="{{ form.videos|length > 0 ? form.videos|last.vars.name + 1 : 0 }}"
+		>
+	</div>
+</div>
