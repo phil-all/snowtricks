@@ -149,4 +149,14 @@ class Media
 
         return $this;
     }
+
+    /**
+     * Register Magic Method to Print the id of the Media
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return (string) $this->id;
+    }
 }
