@@ -79,7 +79,7 @@ class MediaRepository extends ServiceEntityRepository
      *
      * @return self
      */
-    public function deleteTrickMediaFile(Media $media): self
+    private function deleteTrickMediaFile(Media $media): self
     {
         if (null !== $media->getId()) {
             $this->eraser->deleteFile($this->getCompleteFilePath($media));
