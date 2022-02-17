@@ -16,7 +16,7 @@ class VideoFormType extends AbstractType
             ->add('swapVideo', TextType::class, [
                 'label' => false,
                 'attr'  => [
-                    'placeholder' => 'Saisir le lien vers une vidéo Youtube'
+                    'placeholder' => 'Lien vers une vidéo Youtube'
                 ]
             ]);
     }

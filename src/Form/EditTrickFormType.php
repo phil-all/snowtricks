@@ -38,20 +38,24 @@ class EditTrickFormType extends AbstractType
                 'label'    => false,
             ])
             ->add('images', CollectionType::class, [
-                'entry_type'    => ImageFormType::class,
-                'entry_options' => ['label' => false],
-                'allow_add'     => true,
-                'allow_delete'  => true,
-                'required'      => false,
-                'label'         => false,
+                'entry_type'     => ImageFormType::class,
+                'entry_options'  => ['label' => false],
+                'by_reference'   => false,
+                'error_bubbling' => false,
+                'allow_add'      => true,
+                'allow_delete'   => true,
+                'required'       => false,
+                'label'          => false,
             ])
             ->add('videos', CollectionType::class, [
-                'entry_type'    => VideoFormType::class,
-                'entry_options' => ['label' => false],
-                'allow_add'     => true,
-                'allow_delete'  => true,
-                'required'      => false,
-                'label'         => false,
+                'entry_type'     => VideoFormType::class,
+                'entry_options'  => ['label' => false],
+                'by_reference'   => false,
+                'error_bubbling' => false,
+                'allow_add'      => true,
+                'allow_delete'   => true,
+                'required'       => false,
+                'label'          => false,
             ]);
     }
 
