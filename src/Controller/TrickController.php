@@ -4,10 +4,13 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Trick;
+use App\Entity\Comment;
+use App\Form\CommentFormType;
 use App\Form\EditTrickFormType;
 use App\Form\CreateTrickFormType;
 use App\Repository\TrickRepository;
 use App\Service\Entity\TrickService;
+use App\Repository\CommentRepository;
 use App\Repository\CategoryRepository;
 use Symfony\Component\Form\FormInterface;
 use App\Service\Entity\MediaUpdaterService;
@@ -42,15 +45,37 @@ class TrickController extends AbstractController
     /**
      * @Route("/trick/{id}/{slug}", name="app_trick_read")
      *
-     * @param Trick $trick
+     * @param Request           $request
+     * @param Trick             $trick
+     * @param CommentRepository $commentRepository
      *
      * @return Response
      */
-    public function read(Trick $trick): Response
+    public function read(Request $request, Trick $trick, CommentRepository $commentRepository): Response
     {
-        return $this->render('single/index.html.twig', [
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $options = [
             'trick' => $trick
-        ]);
+        ];
+
+        if (null !== $user) {
+            /** @var Comment $comment */
+            $comment = $commentRepository->init($user, $trick);
+
+            $form = $this->createForm(CommentFormType::class, $comment)->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $commentRepository->persist($comment);
+
+                return new RedirectResponse($request->headers->get('referer') . '/#comment');
+            }
+
+            $options['form'] = $form->createView();
+        }
+
+        return $this->render('single/index.html.twig', $options);
     }
 
     /**
