@@ -6,8 +6,8 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\Repository\TrickRepository;
-use App\Service\Entity\TrickMediaService;
 use Doctrine\Common\Collections\Collection;
+use App\Service\Entity\MediaAccessorService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -88,9 +88,9 @@ class Trick
     private Collection $videos;
 
     /**
-     * @var TrickMediaService
+     * @var MediaAccessorService
      */
-    private TrickMediaService $trickMediaService;
+    private MediaAccessorService $mediaAccessorService;
 
     public function __construct()
     {
@@ -323,14 +323,14 @@ class Trick
     }
 
     /**
-     * Sets once TrickMediaService
+     * Sets once MediaAccessorService
      *
-     * @return TrickMediaService
+     * @return MediaAccessorService
      */
-    public function getOnceMediaService(): TrickMediaService
+    public function getOnceMediaService(): MediaAccessorService
     {
-        $this->trickMediaService = $this->trickMediaService ?? new TrickMediaService($this);
+        $this->mediaAccessorService = $this->mediaAccessorService ?? new MediaAccessorService($this);
 
-        return $this->trickMediaService;
+        return $this->mediaAccessorService;
     }
 }
