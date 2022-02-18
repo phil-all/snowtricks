@@ -1,0 +1,19 @@
+<div id="comment">
+	{{ form_start(form) }}
+
+	<div class="d-flex justify-content-center mx-5">
+		<div class="row col-12 p-2 d-flex justify-content-end m-3 p-3">
+			<div class="col-11">
+				{{ form_widget(form.content) }}
+				{{ form_errors(form) }}
+			</div>
+			<div class="col-1 text-end p-0">
+				<button class="btn btn-lg btn-primary" type="submit">
+					<i class="bi bi-send-fill"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	{{ form_end(form) }}
+</div>
