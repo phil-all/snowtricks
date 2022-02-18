@@ -2,6 +2,7 @@
 
 namespace App\Service\Entity;
 
+use App\Entity\User;
 use App\Entity\Media;
 use App\Entity\Trick;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -9,21 +10,21 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Used to help trick media management
  */
-class TrickMediaService
+class MediaAccessorService
 {
     /**
-     * @var Trick
+     * @var User|Trick
      */
-    private Trick $trick;
+    private User|Trick $owner;
 
     /**
      * Constructor
      *
-     * @param Trick $trick
+     * @param User|Trick $owner
      */
-    public function __construct(Trick $trick)
+    public function __construct(User|Trick $owner)
     {
-        $this->trick = $trick;
+        $this->owner = $owner;
     }
 
     /**
@@ -36,7 +37,7 @@ class TrickMediaService
     public function getFilteredMediaCollection(string $type): ArrayCollection
     {
         /** @var ArrayCollection $mediaCollection */
-        $mediaCollection =  $this->trick->getMedia()->filter(function (Media $media) use ($type) {
+        $mediaCollection =  $this->owner->getMedia()->filter(function (Media $media) use ($type) {
             return $media->getType()->getType() === $type;
         });
 

@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Media;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use App\Service\Entity\MediaAccessorService;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -84,6 +86,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $registredAt;
+
+    /**
+     * @var Media
+     */
+    private Media $avatar;
+
+    /**
+     * @var MediaAccessorService
+     */
+    private MediaAccessorService $mediaAccessorService;
 
     public function __construct()
     {
@@ -341,5 +353,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->registredAt = $registredAt;
 
         return $this;
+    }
+
+    /**
+     * Get the value of avatar
+     *
+     * @return  Media|null
+     */
+    public function getAvatar(): ?Media
+    {
+        /** @var Media|false */
+        $thumbnail =  $this->getOnceMediaService()->getFilteredMediaCollection('avatar')->first();
+
+        return (!$thumbnail) ? null : $thumbnail;
+    }
+
+    /**
+     * Set the value of avatar
+     *
+     * @return  self
+     */
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    /**
+     * Sets once MediaAccessorService
+     *
+     * @return MediaAccessorService
+     */
+    public function getOnceMediaService(): MediaAccessorService
+    {
+        $this->mediaAccessorService = $this->mediaAccessorService ?? new MediaAccessorService($this);
+
+        return $this->mediaAccessorService;
     }
 }

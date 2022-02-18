@@ -30,7 +30,7 @@ class Media
     private $type;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="media")
+     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="media", cascade={"persist"})
      */
     private $trick;
 
@@ -148,5 +148,15 @@ class Media
         $this->swapVideo = $swapVideo;
 
         return $this;
+    }
+
+    /**
+     * Register Magic Method to Print the id of the Media
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return (string) $this->id;
     }
 }

@@ -1,0 +1,35 @@
+{# Define thumbnail path #}
+{% if trick.thumbnail == null %}
+	{% set thumbnailPath = 'img/default.jpg' %}
+{% else %}
+	{% set thumbnailPath = 'uploads/' ~ trick.thumbnail.path %}
+{% endif %}
+
+<div class="data p-2">
+	<div class="card border-0">
+		<div style="height-max: 240px">
+			<img src="{{ asset(thumbnailPath) }}" class="card-img-top" height="230">
+		</div>
+		<div class="card-body d-flex justify-content-between">
+			<a href="{{ path('app_trick_read', {"id": trick.id, "slug": trick.slug}) }}">
+				<button type="button" class="btn btn-outline-secondary btn-sm btn-title-card">
+					<span class="bolder">{{ trick.title }}</span>
+				</button>
+			</a>
+			<div>
+				{% if is_granted('ROLE_USER') %}
+					<a href="{{ path('app_trick_update', {"id": trick.id, "slug": trick.slug }) }}" class="text-decoration-none">
+						<button type="button" class="btn btn-success btn-rounded">
+							<i class="bi bi-pencil-fill"></i>
+						</button>
+					</a>
+					<a href="{{ path('app_trick_delete', {"id": trick.id, "slug": trick.slug}) }}">
+						<button type="button" class="btn btn-danger btn-rounded">
+							<i class="bi bi-trash-fill"></i>
+						</button>
+					</a>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>

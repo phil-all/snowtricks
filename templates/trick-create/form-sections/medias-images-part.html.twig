@@ -1,0 +1,11 @@
+<div class="col-12 pb-3">
+	<p>Images additionnelles</p>
+	<button type="button" class="btn btn-primary btn-new" data-collection="#images">Nouvelle image</button>
+	<div
+			id="images"
+			class="row"			
+			data-prototype="{{ include('trick-form-prototypes/images-prototype.html.twig', { form: form.images.vars.prototype })|e('html_attr') }}"
+			data-index="{{ form.images.vars.data|length > 0 ? form.images|last.vars.name + 1 : 0 }}"
+			>
+	</div>
+</div>

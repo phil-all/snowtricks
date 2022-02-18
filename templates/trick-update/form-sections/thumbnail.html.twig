@@ -1,7 +1,12 @@
 <div class="row">
 	<p>Image à la une</p>
 	<div class="col">
-		<div style="height: 45vh; background-image: url('{{ asset('uploads/' ~ trick.thumbnail.path) }}');" class="center-image d-flex flex-column justify-content-around text-white mb-2"></d>
+		{% if trick.thumbnail == null %}
+			{% set thumbnailPath = 'img/default.jpg' %}
+		{% else %}
+			{% set thumbnailPath = 'uploads/' ~ trick.thumbnail.path %}
+		{% endif %}
+		<div style="height: 45vh; background-image: url('{{ asset(thumbnailPath) }}');" class="center-image d-flex flex-column justify-content-around text-white mb-2"></d>
 	</div>
 	<div class="col">
 		{{ form_row(form.thumbnail) }}

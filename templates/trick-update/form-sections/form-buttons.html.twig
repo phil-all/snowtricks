@@ -1,8 +1,10 @@
 <div class="row my-5">
 	<div class="col">
-		<button class="btn btn-lg btn-primary" type="submit">Sauvegarder les modifications</button>
+		<button class="btn btn-lg btn-success" type="submit">Modifier</button>
 	</div>
 	<div class="col d-flex justify-content-end">
-		<button class="btn btn-lg btn-primary">Supprimer le trick</button>
+		<a href="{{ path('app_trick_delete', {"id": trick.id, "slug": trick.slug}) }}" class="btn btn-lg btn-danger">
+			Supprimer
+		</a>
 	</div>
 </div>

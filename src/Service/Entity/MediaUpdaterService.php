@@ -9,6 +9,7 @@ use App\Service\Uploader;
 use App\Repository\TypeRepository;
 use App\Repository\MediaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -32,6 +33,11 @@ class MediaUpdaterService
     private MediaRepository $mediaRepository;
 
     /**
+     * @var Trick
+     */
+    private Trick $trick;
+
+    /**
      * MediaUpdaterService constructor.
      *
      * @param Uploader        $publicUploader
@@ -47,42 +53,102 @@ class MediaUpdaterService
         $this->mediaRepository = $mediaRepository;
     }
 
+    public function defineTrick(Trick $trick): self
+    {
+        if (null === $trick->getSlug()) {
+            $trick->setSlug((new AsciiSlugger())->slug($trick->getTitle(), '-'));
+        }
+
+        $this->trick = $trick;
+
+        return $this;
+    }
+
     /**
-     * Replace a trick thumbnail
+     * Update trick Medias from form datas
+     *
+     * @param ArrayCollection $formImages
+     * @param ArrayCollection $formVideos
+     *
+     * @return void
+     */
+    public function updateMedias(
+        ?UploadedFile $formThumbnail,
+        ArrayCollection $formImages,
+        ArrayCollection $formVideos
+    ): void {
+        $this->setThumbnail($formThumbnail)
+            ->deleteImagesAndVideos($formImages, $formVideos)
+            ->setAdditionnalImages($formImages)
+            ->setVideos($formVideos);
+    }
+
+    /**
+     * Set a trick thumbnail
      *
      * @param UploadedFile|null $uploadedFile
-     * @param Media             $media
      *
      * @return self
      */
-    public function replaceThumbnail(?UploadedFile $uploadedFile, Media $media): self
+    private function setThumbnail(?UploadedFile $uploadedFile): self
     {
         if (null !== $uploadedFile) {
-            $this->picturesProcess($uploadedFile, $media);
+            /** @var Media $thumbnail */
+            $thumbnail = $this->trick->getThumbnail();
+
+            $this->picturesProcess($uploadedFile, $thumbnail);
+        }
+
+        return $this;
+    }
+
+    private function deleteImagesAndVideos(ArrayCollection $formImages, ArrayCollection $formVideos): self
+    {
+        /** @var array $trickImagesAndVideos */
+        $trickImagesAndVideos = array_merge(
+            $this->trick->getImages()->toArray(),
+            $this->trick->getVideos()->toArray()
+        );
+
+        /** @var array $formImagesAndVideos */
+        $formImagesAndVideos = array_merge(
+            $formImages->toArray(),
+            $formVideos->toArray()
+        );
+
+        /** @var array $mediasToDelete */
+        $mediasToDelete = array_diff(
+            $trickImagesAndVideos,
+            $formImagesAndVideos
+        );
+
+        /** @var Media $media */
+        foreach ($mediasToDelete as $media) {
+            $this->mediaRepository->deleteMedia($media);
         }
 
         return $this;
     }
 
     /**
-     * Replace trick additionnal images
+     * Set trick additionnal images
      *
-     * @param ArrayCollection $images
+     * @param ArrayCollection $formImages
      *
      * @return self
      */
-    public function replaceAdditionnalImages(ArrayCollection $images, Trick $trick): self
+    private function setAdditionnalImages(ArrayCollection $formImages): self
     {
-        /** @var Media $image */
-        foreach ($images as $image) {
-            if (null !== $image->getFile()) {
+        /** @var Media $media */
+        foreach ($formImages as $media) {
+            if (null !== $media->getFile()) {
                 /** @var UploadedFile $uploadedMediaFile*/
-                $uploadedMediaFile = $image->getFile();
+                $uploadedMediaFile = $media->getFile();
 
-                if (null !== $image->getId()) {
-                    $this->picturesProcess($uploadedMediaFile, $image);
+                if (null !== $media->getId()) {
+                    $this->picturesProcess($uploadedMediaFile, $media);
                 } else {
-                    $this->createAdditionnalImage($uploadedMediaFile, $trick);
+                    $this->createAdditionnalImage($uploadedMediaFile);
                 }
             }
         }
@@ -91,24 +157,24 @@ class MediaUpdaterService
     }
 
     /**
-     * Replace trick videos
+     * Set trick videos
      *
-     * @param ArrayCollection $videos
+     * @param ArrayCollection $formVideos
      *
      * @return self
      */
-    public function replaceVideos(ArrayCollection $videos, Trick $trick): self
+    private function setVideos(ArrayCollection $formVideos): self
     {
-        /** @var Media $video */
-        foreach ($videos as $video) {
-            if (null !== $video->getSwapVideo()) {
+        /** @var Media $media */
+        foreach ($formVideos as $media) {
+            if (null !== $media->getSwapVideo()) {
                 /** @var string $newVideoUrl*/
-                $newVideoUrl = $video->getSwapVideo();
+                $newVideoUrl = $this->embedYoutubeLink($media->getSwapVideo());
 
-                if (null !== $video->getId()) {
-                    $this->videoProcess($newVideoUrl, $video);
+                if (null !== $media->getId()) {
+                    $this->videoProcess($newVideoUrl, $media);
                 } else {
-                    $this->createVideo($trick, $newVideoUrl);
+                    $this->createVideo($newVideoUrl);
                 }
             }
         }
@@ -120,16 +186,26 @@ class MediaUpdaterService
      * Process pictures update
      *
      * @param UploadedFile|null $uploadedFile
-     * @param Media             $media
+     * @param Media|null        $media
      *
      * @return void
      */
-    private function picturesProcess(?UploadedFile $uploadedFile, Media $media): void
+    private function picturesProcess(?UploadedFile $uploadedFile, ?Media $media): void
     {
         if (null !== $uploadedFile) {
             $this->publicUploader->uploadImage($uploadedFile);
 
-            $this->mediaRepository->replaceTrickMedia($media, $this->publicUploader->getNewFileName());
+            if (null === $media) {
+                /** @var Type $type */
+                $type = $this->typeRepository->findOneBy(['type' => 'thumbnail']);
+
+                /** @var string $path */
+                $path = $this->publicUploader->getNewFileName();
+
+                $this->mediaRepository->createTrickMedia($type, $this->trick, $path);
+            } else {
+                $this->mediaRepository->replaceTrickMedia($media, $this->publicUploader->getNewFileName());
+            }
         }
     }
 
@@ -137,11 +213,10 @@ class MediaUpdaterService
      * Create an additionnal trick image
      *
      * @param UploadedFile|null $uploadedFile
-     * @param Trick             $trick
      *
      * @return void
      */
-    private function createAdditionnalImage(?UploadedFile $uploadedFile, Trick $trick): void
+    private function createAdditionnalImage(?UploadedFile $uploadedFile): void
     {
         if (null !== $uploadedFile) {
             $this->publicUploader->uploadImage($uploadedFile);
@@ -149,7 +224,10 @@ class MediaUpdaterService
             /** @var Type $type */
             $type = $this->typeRepository->findOneBy(['type' => 'image']);
 
-            $this->mediaRepository->createTrickMedia($type, $trick, $this->publicUploader->getNewFileName());
+            /** @var string $path */
+            $path = $this->publicUploader->getNewFileName();
+
+            $this->mediaRepository->createTrickMedia($type, $this->trick, $path);
         }
     }
 
@@ -168,11 +246,37 @@ class MediaUpdaterService
         }
     }
 
-    public function createVideo(Trick $trick, string $url)
+    private function createVideo(string $url)
     {
         /** @var Type $type */
         $type = $this->typeRepository->findOneBy(['type' => 'video']);
 
-        $this->mediaRepository->createTrickMedia($type, $trick, $url);
+        $this->mediaRepository->createTrickMedia($type, $this->trick, $url);
+    }
+
+    /**
+     * Get an emebd youtube link from a given url
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    private function embedYoutubeLink(string $url): string
+    {
+        // clean url begining
+        $firstFilter = preg_replace(
+            '/(^http(?:s?):\/\/(?:(www\.)*youtu(?:be\.com\/watch\?v=|\.be\/)))/',
+            '',
+            $url
+        );
+
+        // clean url end
+        $secondFilter = preg_replace(
+            '/(&(.*))/',
+            '',
+            $firstFilter
+        );
+
+        return 'http://www.youtube.com/embed/' . $secondFilter;
     }
 }
