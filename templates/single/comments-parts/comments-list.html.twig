@@ -4,7 +4,7 @@
 			<div class="d-flex flex-column">
 				<div class="d-flex">
 					<img src="{{ comment.user.avatar.path }}" class="rounded-circle pt-1" alt="avatar" width="42" height="42">
-					<div class=" mx-2 w-100 bg-light rounded">
+					<div class=" mx-2 w-100 bg-light rounded text-secondary">
 						<div class="d-flex">
 							<div class="px-2 fw-bold">
 								{{ comment.user.firstName }}
@@ -14,10 +14,6 @@
 							<div class="px-2 fw-bold text-secondary">
 								{{ comment.createdAt|date('l, d F Y') }}
 							</div>
-						</div>
-						<div class="px-2 text-secondary">
-							@trick:
-							{{ trick.title }}
 						</div>
 						<div class="p-3">{{ comment.content }}</div>
 					</div>
@@ -31,7 +27,7 @@
 {% if trick.comments|length > 4 %}
 	<div class="d-flex justify-content-around">
 		<a href="#" id="loadMore">
-			<button class="btn btn-secondary" type="button" disabled>
+			<button class="btn btn-light" type="button" disabled>
 				<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
 				commentaires suivants...
 			</button>
