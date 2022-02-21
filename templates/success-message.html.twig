@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	<div class="container m-5">
+	<div class="container my-5" style="min-height: 100vh"
 		<div class="d-flex justify-content-around">
 			<div class="alert alert-success text-center" role="alert">
-				<h1 class="m-5">
+				<h1 class="m-5 form-title">
 					{% block message_title %}{% endblock %}
 				</h1>
 				{% block message_content %}{% endblock %}

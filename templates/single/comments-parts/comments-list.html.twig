@@ -1,4 +1,4 @@
-<div class="mx-5 py-3">
+<div class="py-3">
 	{% for comment in trick.comments|sortBy('createdAt', 'desc') %}
 		{# set avatar path#}
 		{% if comment.user.avatar.path is defined %}
@@ -11,7 +11,7 @@
 			{% endif %}
 		{% endif %}
 
-		<div class="m-3 p-3 content">
+		<div class="my-3 content">
 			<div class="d-flex flex-column">
 				<div class="d-flex">
 					<img src="{{ avatar_path }}" class="rounded-circle pt-1" alt="avatar" width="42" height="42">

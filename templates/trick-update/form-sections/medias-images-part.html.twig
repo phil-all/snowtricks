@@ -1,8 +1,8 @@
 <div class="col-12 pb-3">
 	<p>Images additionnelles</p>
-	<div id="images" class="row" data-prototype="{{ include('trick-form-prototypes/images-prototype.html.twig', { form: form.images.vars.prototype })|e('html_attr') }}" data-index="{{ form.images.vars.data|length > 0 ? form.images|last.vars.name + 1 : 0 }}">
+	<div id="images" class="row d-flex justify-content-center" data-prototype="{{ include('trick-form-prototypes/images-prototype.html.twig', { form: form.images.vars.prototype })|e('html_attr') }}" data-index="{{ form.images.vars.data|length > 0 ? form.images|last.vars.name + 1 : 0 }}">
 		{% for image in form.images %}
-			<div class="col-3 p-2 m-0 item">
+			<div class="col-10 col-md-6 col-lg-4 col-xl-3 p-2 m-0 item">
 				<div class="center-image" style="height: 220px; background-image: url('{{ asset('uploads/' ~ image.vars.data.path) }}')">
 					<div class="d-flex justify-content-end p-1">
 						<div class="upload px-1">

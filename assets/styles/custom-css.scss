@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Creepster");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500&display=swap");
 
 body {
   color: #ebe7f3 !important;
@@ -14,6 +15,11 @@ h1,
 
 h1 {
   font-size: 3.5em !important;
+}
+
+.form-title {
+  font-family: "Cinzel", serif !important;
+  font-size: 3em !important;
 }
 
 .content {
