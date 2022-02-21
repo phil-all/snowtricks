@@ -1,14 +1,17 @@
 <section style="height: 100vh; background-image: url('{{ asset('img/hero.jpg') }}')" class="center-image bg-secondary">
 	<div class="d-flex flex-column justify-content-around text-white home-hero-textbox">
 		<div class="text-center">
-			<h1>Snowtricks</h1>
-			<h3>le super slogan qui change tout !</h3>
+		
+
+			<h1 style="font-size: 3.5em" class="brand-font">
+				<img src="{{ asset('img/white-logo.png') }}" height="87px" width="87px" />
+				Snowtricks
+			</h1>
+			<h3>Le rendez-vous des passionnés de surf !</h3>
 		</div>
-		<div class="text-end">
-			<a href="#tricks" class="text-white">
-				<svg width="64" height="32" fill="currentColor" class="bi bi-arrow-down-circle-fill" viewbox="0 0 16 16">
-					<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
-				</svg>
+		<div class="text-end mx-2">
+			<a href="#tricks" class="btn btn-primary btn-rounded">
+				<i class="bi bi-caret-down-fill"></i>
 			</a>
 		</div>
 	</div>

@@ -6,7 +6,7 @@
 				<div class="center-image" style="height: 220px; background-image: url('{{ asset('uploads/' ~ image.vars.data.path) }}')">
 					<div class="d-flex justify-content-end p-1">
 						<div class="upload px-1">
-							<label for="input-file" type="button" class="btn btn-success btn-rounded">
+							<label for="input-file" type="button" class="btn btn-primary btn-rounded">
 								<i class="bi bi-pencil-fill"></i>
 							</label>
 							<div class="d-none">{{ form_widget(image.file, { 'id': 'input-file' }) }}</div>
@@ -22,5 +22,5 @@
 			</div>
 		{% endfor %}
 	</div>
-	<button type="button" class="btn btn-primary btn-new" data-collection="#images">Nouvelle image</button>
+	<button type="button" class="btn btn-primary btn-new btn-rounded" data-collection="#images">+</button>
 </div>

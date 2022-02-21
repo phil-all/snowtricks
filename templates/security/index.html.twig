@@ -6,12 +6,12 @@
 
 {% block body %}
 	<div class="container" style="height: 100vh;">
-		<form method="post">
+		<form method="post" class="my-5">
 			{% if error %}
 				<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
 			{% endif %}
 
-			<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+			<h1 class="text-center mb-3 font-weight-normal">Connexion</h1>
 			<label for="inputEmail" class="mt-5">Email</label>
 			<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
 			<label for="inputPassword" class="mt-5">Password</label>

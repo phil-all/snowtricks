@@ -1,0 +1,30 @@
+$primary: #de0050;
+$light: #e8e3f2;
+$danger: #98310c;
+$success: #21806b;
+$card-border-radius: 0.8rem;
+$card-border-color: none;
+$secondary: #2d2c2e;
+$dark: #121212;
+$input-bg: $secondary;
+$input-border-color: $secondary;
+$input-focus-border-color: $primary;
+$input-color: $light;
+
+.nav-link,
+.nav-link-separator,
+.navbar-brand {
+    color: #de0050 !important;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+}
+
+.nav-link:hover,
+.navbar-brand:hover {
+    color: #fdfcff !important;
+}
+
+.card:hover {
+    border: 1px !important;
+    border-color: #de0050 !important;
+}
