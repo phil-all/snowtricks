@@ -146,7 +146,7 @@ class TrickController extends AbstractController
                 ->defineTrick($trick)
                 ->updateMedias($uploadedThumbnailFile, $images, $videos);
 
-            $trickRepository->update($trick);
+            $trickService->update($trick);
 
             return $this->redirectToRoute('app_home');
         }
