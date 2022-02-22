@@ -1,6 +1,10 @@
-# Snowtricks
+![Library logo](public/img/readme.png)
 
 Collaborative web site, about snowboard tricks
+
+* * *
+
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/625a7974040b45f0bd99b0c9705d9111)](https://www.codacy.com/gl/phil-all/snowtricks/dashboard?utm_source=gitlab.com&utm_medium=referral&utm_content=phil-all/snowtricks&utm_campaign=Badge_Grade)
 
 * * *
 
