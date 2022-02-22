@@ -6,6 +6,9 @@ use Twig\TwigFilter;
 use InvalidArgumentException;
 use Twig\Extension\AbstractExtension;
 
+/**
+ * Twig filter to sort by field
+ */
 class SortByExtension extends AbstractExtension
 {
     /**

@@ -53,6 +53,13 @@ class MediaUpdaterService
         $this->mediaRepository = $mediaRepository;
     }
 
+    /**
+     * Define a trick slug
+     *
+     * @param Trick $trick
+     *
+     * @return self
+     */
     public function defineTrick(Trick $trick): self
     {
         if (null === $trick->getSlug()) {
@@ -102,6 +109,14 @@ class MediaUpdaterService
         return $this;
     }
 
+    /**
+     * Delete images and videos
+     *
+     * @param ArrayCollection $formImages
+     * @param ArrayCollection $formVideos
+     *
+     * @return self
+     */
     private function deleteImagesAndVideos(ArrayCollection $formImages, ArrayCollection $formVideos): self
     {
         /** @var array $trickImagesAndVideos */
@@ -246,6 +261,13 @@ class MediaUpdaterService
         }
     }
 
+    /**
+     * Create video
+     *
+     * @param string $url
+     *
+     * @return void
+     */
     private function createVideo(string $url)
     {
         /** @var Type $type */

@@ -13,6 +13,13 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class TrickFixtures extends Fixture implements DependentFixtureInterface
 {
+    /**
+     * Load tricks
+     *
+     * @param ObjectManager $manager
+     *
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
         $faker       = Factory::create('fr_FR');
@@ -51,7 +58,12 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    public function getDependencies()
+    /**
+     * Get tricks dependencies
+     *
+     * @return array
+     */
+    public function getDependencies(): array
     {
         return [
             UserFixtures::class
@@ -69,7 +81,7 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
     {
         $count = 0;
 
-        while ($this->hasReference($subject . '_' . $count + 1)) {
+        while ($this->hasReference($subject . '_' . strval($count + 1))) {
             $count++;
         }
 

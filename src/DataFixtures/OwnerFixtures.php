@@ -11,13 +11,28 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class OwnerFixtures extends Fixture implements DependentFixtureInterface
 {
+    /**
+     * @var UserPasswordHasherInterface
+     */
     private UserPasswordHasherInterface $hasher;
 
+    /**
+     * OwnerFixtures constructor
+     *
+     * @param UserPasswordHasherInterface $hasher
+     */
     public function __construct(UserPasswordHasherInterface $hasher)
     {
         $this->hasher = $hasher;
     }
 
+    /**
+     * Load Owner
+     *
+     * @param ObjectManager $manager
+     *
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
         $user = new User();
@@ -42,7 +57,12 @@ class OwnerFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    public function getDependencies()
+    /**
+     * Get owner dependencies
+     *
+     * @return array
+     */
+    public function getDependencies(): array
     {
         return [
             StatusFixtures::class,

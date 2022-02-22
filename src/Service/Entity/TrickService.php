@@ -9,6 +9,9 @@ use DateTimeImmutable;
 use App\Repository\MediaRepository;
 use App\Repository\TrickRepository;
 
+/**
+ * Trick service
+ */
 class TrickService
 {
     /**

@@ -3,11 +3,18 @@
 namespace App\DataFixtures;
 
 use App\Entity\Gender;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 
 class GenderFixtures extends Fixture
 {
+    /**
+     * Load genders
+     *
+     * @param ObjectManager $manager
+     *
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
         // create status : pending / active / suspended

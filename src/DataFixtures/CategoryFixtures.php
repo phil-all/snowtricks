@@ -3,11 +3,18 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 
 class CategoryFixtures extends Fixture
 {
+    /**
+     * Load categories
+     *
+     * @param ObjectManager $manager
+     *
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
         // create 3 categories : grab / rotations / flip
