@@ -18,12 +18,15 @@
 
 	</head>
 
-	<body class="min-vh-100">
-		{% include 'base/navbar.html.twig' %}
+	<body>
 
-		{% block body %}{% endblock %}
+		<div class="d-flex flex-column justify-content-between" style="min-height: 100vh">
+			{% include 'base/navbar.html.twig' %}
 
-		{% include 'base/footer.html.twig' %}
+			{% block body %}{% endblock %}
+
+			{% include 'base/footer.html.twig' %}
+		</div>
 
 		{% block javascripts %}
 			{% include 'base/scripts.html.twig' %}

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+
+{% if app.user.media.values.0 is defined %}
+    {% set avatar_path = app.user.media.values.0.path %}
+{% else %}
+    {% if app.user.gender.gender == 'male' %}
+        {% set avatar_path = url('app_home') ~ 'img/male.jpg' %}        
+    {% elseif app.user.gender.gender == 'female' %}
+        {% set avatar_path = url('app_home') ~ 'img/female.jpg' %}   
+    {% endif %}
+{% endif %}
+
+<div class="container my-5">
+    <div class="card bg-secondary">
+        <div class="card-img-top bg-primary" style="height: 150px"></div>
+        <div class="avatar-holder d-flex justify-content-center w-100" style="position: absolute; top: 60px;">
+            <img class="profil-img" src="{{ avatar_path }}" alt="avatar" width="180px" height="180px">
+        </div>
+        <div class="card-body p-0" style="height: 520px">
+            <div class="w-100 p-2" style="position: absolute; top: 280px">
+                <h2 class="text-center mt-2 mb-5 form-title" style="font-size: 2em !important">{{ app.user.firstName }} {{ app.user.lastName }}</h2>
+                <div class="profil-item mx-md-2 mx-lg-5">
+                    <h5 class="text-primary">membre depuis</h5>
+                    <p class="m-0">{{ app.user.registredAt|format_datetime('full', 'short', locale='fr') }}</p>
+                </div>
+                <div class="profil-item mx-md-2 mx-lg-5">
+                    <h5 class="text-primary">email</h5>
+                    <p class="m-0">{{ app.user.email }}</p>
+                </div>
+                <div class="profil-item mx-md-2 mx-lg-5">
+                    <h5 class="text-primary">Status du profil</h5>
+                    <p class="m-0">{{ app.user.status.status }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
