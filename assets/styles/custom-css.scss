@@ -86,3 +86,45 @@ h1 {
   border-radius: 50%;
   box-shadow: 0 0 0 8px #de0050, 0 0 0 18px #fff;
 }
+
+/* responsive single trick media gallery */
+.toggle {
+  display: none;
+}
+
+.gallery {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#gallery-button {
+  display: none;
+}
+
+@media all and (max-width: 730px) {
+  .toggle {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  #gallery-button {
+    display: block;
+  }
+
+  .show {
+    display: block !important;
+  }
+
+  .hide {
+    display: none !important;
+  }
+
+  .open .show {
+    display: none !important;
+  }
+
+  .open .hide {
+    display: block !important;
+  }
+}
