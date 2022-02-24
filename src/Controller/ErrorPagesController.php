@@ -27,6 +27,6 @@ class ErrorPagesController extends AbstractController
             $this->sessionInvalidate(); // invalidate only anonymous session.
         }
 
-        throw new BadRequestHttpException('Le lien que vous avez suivi est expiré ou invalide', null, 400);
+        throw new BadRequestHttpException(null, null, 400);
     }
 }
