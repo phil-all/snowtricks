@@ -12,11 +12,7 @@
 						<i class="bi bi-pencil-fill"></i>
 					</button>
 				</a>
-				<a href="{{ path('app_trick_delete', {"id": trick.id, "slug": trick.slug}) }}">
-					<button type="button" class="btn btn-danger btn-rounded">
-						<i class="bi bi-trash-fill"></i>
-					</button>
-				</a>
+				{% include 'trick-buttons/trick-delete-button.html.twig' %}
 			</div>
 		</div>
 	{% endif %}

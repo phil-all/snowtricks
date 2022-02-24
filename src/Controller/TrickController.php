@@ -82,9 +82,11 @@ class TrickController extends AbstractController
      * @Route("/trick/modifier/{id}/{slug}", name="app_trick_update")
      * @Route("/create", name="app_trick_create")
      *
-     * @param Request              $request
-     * @param CategoryRepository   $categoryRepository
-     * @param TrickRepository      $trickRepository
+     * @param Request             $request
+     * @param TrickService        $trickService
+     * @param TrickRepository     $trickRepository
+     * @param CategoryRepository  $categoryRepository
+     * @param MediaUpdaterService $mediaUpdaterService
      *
      * @return Response
      */
@@ -158,16 +160,31 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/trick/delete/{id}/{slug}", name="app_trick_delete")
+     * @Route("/trick/delete/{id}/{token}", name="app_trick_delete")
+     *
+     * @param Trick        $trick
+     * @param Request      $request
+     * @param TrickService $trickService
      *
      * @return RedirectResponse
      */
-    public function delete(Trick $trick, TrickService $trickService): RedirectResponse
-    {
+    public function delete(
+        Trick $trick,
+        Request $request,
+        TrickService $trickService
+    ): RedirectResponse {
+
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        $trickService->delete($trick);
+        /** @var string $submittedToken */
+        $submittedToken = $request->attributes->get('_route_params')['token'];
 
-        return $this->redirectToRoute('app_home');
+        if ($this->isCsrfTokenValid('delete-trick', $submittedToken)) {
+            $trickService->delete($trick);
+
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->redirectToRoute('app_error_visitor_link');
     }
 }

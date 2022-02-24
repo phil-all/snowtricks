@@ -6,9 +6,6 @@
 		</button>
 	</div>
 	<div class="col d-flex justify-content-end">
-		<a href="{{ path('app_trick_delete', {"id": trick.id, "slug": trick.slug}) }}" class="btn btn-lg btn-danger">
-			<i class="bi bi-x-circle-fill"></i>
-			Supprimer
-		</a>
+		{% include 'trick-buttons/trick-delete-button.html.twig' %}
 	</div>
 </div>
