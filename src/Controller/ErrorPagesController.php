@@ -17,7 +17,7 @@ class ErrorPagesController extends AbstractController
     use SessionTrait;
 
     /**
-     * @Route("/lien-non-valide/erreur-400", name="app_error_visitor_link")
+     * @Route("/lien-non-valide/erreur-400", name="app_error_visitor_link", methods={"GET"})
      *
      * @return Response
      */

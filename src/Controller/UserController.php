@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/profil", name="app_user_profile")
+     * @Route("/profil", name="app_user_profile", methods={"GET"})
      *
      * @return Response
      */

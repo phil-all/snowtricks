@@ -40,7 +40,7 @@ class ResetPasswordController extends AbstractController
 
 
     /**
-     * @Route("/reset", name="app_reset_password_request")
+     * @Route("/reset", name="app_reset_password_request", methods={"GET", "POST"})
      *
      * @param Request        $request
      * @param UserRepository $userRepository
@@ -71,7 +71,7 @@ class ResetPasswordController extends AbstractController
     }
 
     /**
-     * @Route("/reset/{header}/{payload}/{signature}", name="app_reset_password_checkmail")
+     * @Route("/reset/{header}/{payload}/{signature}", name="app_reset_password_checkmail", methods={"GET"})
      *
      * @param string $header
      * @param string $payload
@@ -90,7 +90,7 @@ class ResetPasswordController extends AbstractController
     }
 
     /**
-     * @Route("/update-password", name="app_update_password")
+     * @Route("/update-password", name="app_update_password", methods={"GET", "POST"})
      *
      * @param Request        $request
      * @param UserRepository $userRepository

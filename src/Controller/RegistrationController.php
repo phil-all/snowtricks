@@ -46,7 +46,7 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/inscription", name="app_register")
+     * @Route("/inscription", name="app_register", methods={"GET", "POST"})
      *
      * @param Request        $request
      * @param TemplateMailer $mailer
@@ -76,7 +76,7 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/inscription/{header}/{payload}/{signature}", name="app_register_checkmail")
+     * @Route("/inscription/{header}/{payload}/{signature}", name="app_register_checkmail", methods={"GET"})
      *
      * @param string $header
      * @param string $payload
@@ -95,7 +95,7 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/inscription/validation", name="app_register_validation")
+     * @Route("/inscription/validation", name="app_register_validation", methods={"GET"})
      *
      * @return Response
      */

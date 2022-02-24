@@ -29,7 +29,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TrickController extends AbstractController
 {
     /**
-     * @Route("/", name="app_home")
+     * @Route("/", name="app_home", methods={"GET"})
      *
      * @param TrickRepository $trickRepository
      *
@@ -43,7 +43,7 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/trick/{id}/{slug}", name="app_trick_read")
+     * @Route("/trick/{id}/{slug}", name="app_trick_read", methods={"GET", "POST"})
      *
      * @param Request           $request
      * @param Trick             $trick
@@ -79,8 +79,8 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/trick/modifier/{id}/{slug}", name="app_trick_update")
-     * @Route("/create", name="app_trick_create")
+     * @Route("/trick/modifier/{id}/{slug}", name="app_trick_update", methods={"GET", "POST"})
+     * @Route("/create", name="app_trick_create", methods={"GET", "POST"})
      *
      * @param Request             $request
      * @param TrickService        $trickService
@@ -160,7 +160,7 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/trick/delete/{id}/{token}", name="app_trick_delete")
+     * @Route("/trick/delete/{id}/{token}", name="app_trick_delete", methods={"GET"})
      *
      * @param Trick        $trick
      * @param Request      $request
