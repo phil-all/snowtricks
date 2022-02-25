@@ -8,6 +8,13 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 
 class TypeFixtures extends Fixture
 {
+    /**
+     * Load types
+     *
+     * @param ObjectManager $manager
+     *
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
         $types = [

@@ -4,23 +4,27 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container" style="height: 100vh;">
-		<h1>Créez votre compte</h1>
+	<div class="container d-flex justify-content-center mb-5" style="min-height: 100vh;">		
+		<div class="col-12 col-lg-6">
+			{{ form_start(registrationForm) }}
+			
+			<h1 class="my-3 text-center form-title my-4">Inscription</h1>
 
-		{{ form_start(registrationForm) }}
+			{{ form_row(registrationForm.firstName) }}
+			{{ form_row(registrationForm.lastName) }}
+			{{ form_row(registrationForm.email) }}
+			{{ form_row(registrationForm.plainPassword) }}
+			{{ form_row(registrationForm.gender) }}
 
-		{{ form_row(registrationForm.firstName) }}
-		{{ form_row(registrationForm.lastName) }}
-		{{ form_row(registrationForm.email) }}
-		{{ form_row(registrationForm.plainPassword) }}
-		{{ form_row(registrationForm.gender) }}
+			{% set termsOfUseFormGroup %}
+			{{ form_row(registrationForm.rgpd) }}
+			{% endset %}
+			{{ termsOfUseFormGroup|replace({'#RGPD#':'<a class="has-text-underline" href="' ~ absolute_url(path('app_privacy')) ~ '">documentation</a>'})|raw }}
 
-		{% set termsOfUseFormGroup %}
-		{{ form_row(registrationForm.rgpd) }}
-		{% endset %}
-		{{ termsOfUseFormGroup|replace({'#RGPD#':'<a class="has-text-underline" href="' ~ absolute_url(path('app_privacy')) ~ '">documentation</a>'})|raw }}
-
-		<button class="btn btn-lg btn-primary" type="submit">Inscription</button>
-		{{ form_end(registrationForm) }}
+			<div class="d-grid gap-2">
+				<button class="btn btn-lg btn-primary my-2" type="submit">Inscription</button>
+			</div>
+			{{ form_end(registrationForm) }}
+		</div>
 	</div>
 {% endblock %}

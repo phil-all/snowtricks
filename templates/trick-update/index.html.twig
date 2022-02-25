@@ -10,7 +10,17 @@
 
 			{% include 'trick-update/form-sections/thumbnail.html.twig' %}
 
-			{% include 'trick-update/form-sections/medias.html.twig' %}
+			<div class="mb-4 toggle">
+				<i class="bi bi-eye-fill btn btn-success show">&nbsp;Voir médias</i>
+				<i class="bi bi-x-circle-fill btn btn-primary hide">&nbsp;Masquer médias</i>
+			</div>
+			<div class="hide">
+				<div class="gallery">
+
+					{% include 'trick-update/form-sections/medias.html.twig' %}
+
+				</div>
+			</div>
 
 			{% include 'trick-update/form-sections/text-content.html.twig' %}
 

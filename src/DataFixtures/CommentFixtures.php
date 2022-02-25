@@ -2,13 +2,20 @@
 
 namespace App\DataFixtures;
 
+use Faker\Factory;
 use App\Entity\Comment;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Faker\Factory;
 
 class CommentFixtures extends TrickFixtures implements DependentFixtureInterface
 {
+    /**
+     * Load comments
+     *
+     * @param ObjectManager $manager
+     *
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
@@ -39,7 +46,12 @@ class CommentFixtures extends TrickFixtures implements DependentFixtureInterface
         $manager->flush();
     }
 
-    public function getDependencies()
+    /**
+     * Get comment dependencies
+     *
+     * @return array
+     */
+    public function getDependencies(): array
     {
         return [
             TrickFixtures::class

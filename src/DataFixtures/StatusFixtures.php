@@ -3,11 +3,18 @@
 namespace App\DataFixtures;
 
 use App\Entity\Status;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 
 class StatusFixtures extends Fixture
 {
+    /**
+     * Load status
+     *
+     * @param ObjectManager $manager
+     *
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
         $statusList = [

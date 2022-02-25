@@ -1,15 +1,28 @@
-# Snowtricks
+![Library logo](public/img/readme.png)
 
 Collaborative web site, about snowboard tricks
 
 * * *
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/625a7974040b45f0bd99b0c9705d9111)](https://www.codacy.com/gl/phil-all/snowtricks/dashboard?utm_source=gitlab.com&utm_medium=referral&utm_content=phil-all/snowtricks&utm_campaign=Badge_Grade)
+
+* * *
+
 ## Table of contents
 
+-   [Build with](#build-with)
 -   [Installation](#installation)
 -   [Development environment](#development-environment)
 
 * * *
+
+## Build with
+
+-   PHP 8.0
+-   Mysql 8
+-   Symfony 5.4
+-   Composer
+-   Npm
 
 ## Installation
 
@@ -50,6 +63,20 @@ chmod -R 770 public/uploads
 * * *
 
 ## Development environment
+
+### Environment file
+
+Enter following datas in a `env.local` file, under root directory:
+
+-   APP_SECRET
+
+-   MAILER_DSN
+
+-   DATABASE_URL
+
+-   JWT_KEY=
+
+-   LOCK_DSN
 
 ### Launch
 

@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class StaticController extends AbstractController
 {
     /**
-     * @Route("/protection-des-donnees-utilisateur", name="app_privacy")
+     * @Route("/protection-des-donnees-utilisateur", name="app_privacy", methods={"GET"})
      *
      * @return Response
      */

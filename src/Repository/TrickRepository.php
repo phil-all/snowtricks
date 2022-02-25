@@ -3,9 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Trick;
-use DateTimeImmutable;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
@@ -23,18 +22,24 @@ class TrickRepository extends ServiceEntityRepository
 
     /**
      * Used to update a trick
+     *
+     * @param Trick $trick
+     *
+     * @return void
      */
     public function update(Trick $trick): void
     {
-        $slugger = new AsciiSlugger();
-
-        $trick->setSlug($slugger->slug($trick->getTitle(), '-'))
-            ->setUpdateAt(new DateTimeImmutable('now'));
-
         $this->_em->persist($trick);
         $this->_em->flush();
     }
 
+    /**
+     * Remove a trick
+     *
+     * @param Trick $trick
+     *
+     * @return void
+     */
     public function delete(Trick $trick): void
     {
         $this->_em->remove($trick);

@@ -9,6 +9,13 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class MediaFixtures extends TrickFixtures implements DependentFixtureInterface
 {
+    /**
+     * load medias
+     *
+     * @param ObjectManager $manager
+     *
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
         // user avatar
@@ -62,7 +69,12 @@ class MediaFixtures extends TrickFixtures implements DependentFixtureInterface
         $manager->flush();
     }
 
-    public function getDependencies()
+    /**
+     * Get medias dependencies
+     *
+     * @return array
+     */
+    public function getDependencies(): array
     {
         return [
             CommentFixtures::class

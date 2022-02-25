@@ -21,6 +21,9 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
 
+    /**
+     * @var UrlGeneratorInterface
+     */
     private UrlGeneratorInterface $urlGenerator;
 
     public function __construct(UrlGeneratorInterface $urlGenerator)
@@ -28,6 +31,13 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
         $this->urlGenerator = $urlGenerator;
     }
 
+    /**
+     * Authenticate and return Passport
+     *
+     * @param Request $request
+     *
+     * @return Passport
+     */
     public function authenticate(Request $request): Passport
     {
         $email = $request->request->get('email', '');
@@ -43,6 +53,15 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
         );
     }
 
+    /**
+     * Redirect after authentication
+     *
+     * @param Request        $request
+     * @param TokenInterface $token
+     * @param string         $firewallName
+     *
+     * @return Response|null
+     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
@@ -52,6 +71,13 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
         return new RedirectResponse($this->urlGenerator->generate('app_home'));
     }
 
+    /**
+     * Get login url
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);

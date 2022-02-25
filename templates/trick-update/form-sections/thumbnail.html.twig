@@ -9,6 +9,9 @@
 		<div style="height: 45vh; background-image: url('{{ asset(thumbnailPath) }}');" class="center-image d-flex flex-column justify-content-around text-white mb-2"></d>
 	</div>
 	<div class="col">
-		{{ form_row(form.thumbnail) }}
+		<label for="edit_trick_form_thumbnail" type="button" class="btn btn-primary btn-rounded">+</label>
+		<div class="d-none">
+			{{ form_row(form.thumbnail) }}
+		</div>
 	</div>
 </div>

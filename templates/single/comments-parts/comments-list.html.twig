@@ -1,18 +1,29 @@
-<div class="mx-5 py-3">
+<div class="py-3">
 	{% for comment in trick.comments|sortBy('createdAt', 'desc') %}
-		<div class="m-3 p-3 content">
+		{# set avatar path#}
+		{% if comment.user.avatar.path is defined %}
+			{% set avatar_path = comment.user.avatar.path %}
+		{% else %}
+			{% if comment.user.gender.gender == 'male' %}
+				{% set avatar_path = url('app_home') ~ '/img/male.jpg' %}
+			{% elseif comment.user.gender.gender == 'female'%}
+				{% set avatar_path = url('app_home') ~ '/img/female.jpg' %}
+			{% endif %}
+		{% endif %}
+
+		<div class="my-3 content">
 			<div class="d-flex flex-column">
 				<div class="d-flex">
-					<img src="{{ comment.user.avatar.path }}" class="rounded-circle pt-1" alt="avatar" width="42" height="42">
-					<div class=" mx-2 w-100 bg-light rounded text-secondary">
+					<img src="{{ avatar_path }}" class="rounded-circle pt-1" alt="avatar" width="42" height="42">
+					<div class=" mx-2 w-100 bg-secondary text-white rounded">
 						<div class="d-flex">
 							<div class="px-2 fw-bold">
 								{{ comment.user.firstName }}
 								{{ comment.user.lastName }}
 							</div>
 							<div class="px-2">-</div>
-							<div class="px-2 fw-bold text-secondary">
-								{{ comment.createdAt|date('l, d F Y') }}
+							<div class="px-2 fw-bold">
+								{{ comment.createdAt|format_datetime('short', 'short', locale='fr') }}
 							</div>
 						</div>
 						<div class="p-3">{{ comment.content }}</div>
@@ -26,11 +37,9 @@
 
 {% if trick.comments|length > 4 %}
 	<div class="d-flex justify-content-around">
-		<a href="#" id="loadMore">
-			<button class="btn btn-light" type="button" disabled>
-				<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-				commentaires suivants...
-			</button>
+		<a href="#" id="loadMore" class="btn btn-primary" type="button">
+			<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+			commentaires suivants...
 		</a>
 	</div>
 {% endif %}

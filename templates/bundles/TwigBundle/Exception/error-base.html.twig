@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class="center-image bg-error d-flex flex-column justify-content-around home-hero-textbox" style="background-image: url('{{ asset('img/error.jpg') }}')">
+		<div class="container">
+			<h1 class="text-center" style="font-size: 220px !important">{{ status_code }}</h1>
+			<h2>{{ status_text }}</h2>
+			{% block execption %}{% endblock %}
+		</div>
+	</div>
+{% endblock %}

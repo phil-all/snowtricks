@@ -17,7 +17,6 @@ class CommentFormType extends AbstractType
             'label' => false,
             'attr'  => [
                 'rows'        => '1',
-                'class'       => 'bg-light border-0',
                 'placeholder' => 'écrire un commentaire...',
             ],
             'constraints' => [

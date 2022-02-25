@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use App\Repository\StatusRepository;
 use DateTimeImmutable;
+use App\Repository\StatusRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -34,6 +34,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
+     *
+     * @param PasswordAuthenticatedUserInterface $user
+     * @param string                             $newHashedPassword
+     *
+     * @return void
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
@@ -48,6 +53,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     /**
      * Used to create a new pending user.
+     *
+     * @param User                        $user
+     * @param UserPasswordHasherInterface $hasher
+     * @param string                      $password
+     *
+     * @return void
      */
     public function createPendingUser(User $user, UserPasswordHasherInterface $hasher, string $password): void
     {
@@ -65,6 +76,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     /**
      * Used to activate a pending user.
+     *
+     * @param User $user
+     *
+     * @return void
      */
     public function userActivation(User $user): void
     {
@@ -79,6 +94,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    /**
+     * Change password
+     *
+     * @param User                        $user
+     * @param UserPasswordHasherInterface $hasher
+     * @param string                      $password
+     *
+     * @return void
+     */
     public function changePassword(User $user, UserPasswordHasherInterface $hasher, string $password): void
     {
         $user->setPassword($hasher->hashPassword($user, $password));

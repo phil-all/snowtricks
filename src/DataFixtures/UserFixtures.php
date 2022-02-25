@@ -2,22 +2,37 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Faker\Factory;
+use App\Entity\User;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture implements DependentFixtureInterface
 {
+    /**
+     * @var UserPasswordHasherInterface
+     */
     private UserPasswordHasherInterface $hasher;
 
+    /**
+     * UserFixtures constructor
+     *
+     * @param UserPasswordHasherInterface $hasher
+     */
     public function __construct(UserPasswordHasherInterface $hasher)
     {
         $this->hasher = $hasher;
     }
 
+    /**
+     * Load Users
+     *
+     * @param ObjectManager $manager
+     *
+     * @return void
+     */
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
@@ -61,7 +76,12 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    public function getDependencies()
+    /**
+     * Get user dependencies
+     *
+     * @return array
+     */
+    public function getDependencies(): array
     {
         return [
             OwnerFixtures::class
