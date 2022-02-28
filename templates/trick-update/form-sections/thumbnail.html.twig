@@ -1,17 +1,21 @@
-<div class="row">
-	<p>Image à la une</p>
-	<div class="col">
+<div class="row my-5">
+	<div class="col-12 d-flex mb-2">
+		<p class="m-0">Image à la une</p>
+		<div class="mx-2">
+			<label for="edit_trick_form_thumbnail" type="button" class="btn btn-primary btn-new btn-rounded">+</label>
+			<div class="d-none">
+				{{ form_row(form.thumbnail) }}
+			</div>
+		</div>
+	</div>
+
+	<div class="col-12">
 		{% if trick.thumbnail == null %}
 			{% set thumbnailPath = 'img/default.jpg' %}
 		{% else %}
 			{% set thumbnailPath = 'uploads/' ~ trick.thumbnail.path %}
 		{% endif %}
-		<div style="height: 45vh; background-image: url('{{ asset(thumbnailPath) }}');" class="center-image d-flex flex-column justify-content-around text-white mb-2"></d>
+		<div style="height: 45vh; background-image: url('{{ asset(thumbnailPath) }}');" class="center-image d-flex flex-column justify-content-around text-white mb-2"></div>
 	</div>
-	<div class="col">
-		<label for="edit_trick_form_thumbnail" type="button" class="btn btn-primary btn-rounded">+</label>
-		<div class="d-none">
-			{{ form_row(form.thumbnail) }}
-		</div>
-	</div>
+	<div class="col"></div>
 </div>
