@@ -56,7 +56,7 @@ class ResetPasswordController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $form->get('email')->getData();
 
-            if (null !== $userRepository->findOneByEmail($email)) {
+            if (null !== $userRepository->findOneBy(['email' => $email])) {
                 $mailer->sendResetPasswordRequestMail($email);
 
                 return $this->render('messages/reset-password/sent.html.twig', ['email' => $email]);
@@ -105,7 +105,7 @@ class ResetPasswordController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $this->token->getMail($this->getFromSession('ResetPasswordToken'));
-            $user  = $userRepository->findOneByEmail($email);
+            $user  = $userRepository->findOneBy(['email' => $email]);
 
             $userRepository->changePassword($user, $passwordHasher, $form->get('plainPassword')->getData());
             $this->sessionInvalidate();

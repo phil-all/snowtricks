@@ -102,7 +102,7 @@ class RegistrationController extends AbstractController
     public function validation(): Response
     {
         $email = $this->token->getMail($this->getFromSession('RegisterToken'));
-        $user   = $this->userRepository->findOneByEmail($email);
+        $user   = $this->userRepository->findOneBy(['email' => $email]);
         $status = $user->getStatus();
 
         if ($status->getId() !== 1) {

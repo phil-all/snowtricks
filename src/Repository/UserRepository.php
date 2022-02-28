@@ -66,7 +66,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
         }
 
-        $user->setStatus($this->status->findOneByStatus('pending'))
+        $user
+            ->setStatus($this->status->findOneBy(['status' => 'pending']))
             ->setRoles(['ROLE_USER'])
             ->setPassword($hasher->hashPassword($user, $password));
 
@@ -87,7 +88,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
         }
 
-        $user->setStatus($this->status->findOneByStatus('active'))
+        $user->setStatus($this->status->findOneBy(['status' => 'active']))
             ->setRegistredAt(new DateTimeImmutable('now'));
 
         $this->_em->persist($user);
