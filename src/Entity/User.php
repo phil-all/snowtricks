@@ -249,28 +249,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->comments;
     }
 
-    public function addComment(Comment $comment): self
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments[] = $comment;
-            $comment->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): self
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getUser() === $this) {
-                $comment->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection|Trick[]
      */
@@ -279,56 +257,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->tricks;
     }
 
-    public function addTrick(Trick $trick): self
-    {
-        if (!$this->tricks->contains($trick)) {
-            $this->tricks[] = $trick;
-            $trick->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTrick(Trick $trick): self
-    {
-        if ($this->tricks->removeElement($trick)) {
-            // set the owning side to null (unless already changed)
-            if ($trick->getUser() === $this) {
-                $trick->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection|Media[]
      */
     public function getMedia(): Collection
     {
         return $this->media;
-    }
-
-    public function addMedium(Media $medium): self
-    {
-        if (!$this->media->contains($medium)) {
-            $this->media[] = $medium;
-            $medium->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMedium(Media $medium): self
-    {
-        if ($this->media->removeElement($medium)) {
-            // set the owning side to null (unless already changed)
-            if ($medium->getUser() === $this) {
-                $medium->setUser(null);
-            }
-        }
-
-        return $this;
     }
 
     public function getGender(): ?Gender

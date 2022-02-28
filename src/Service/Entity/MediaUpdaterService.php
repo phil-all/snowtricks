@@ -10,7 +10,6 @@ use App\Repository\TypeRepository;
 use App\Repository\MediaRepository;
 use Symfony\Component\Form\FormInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -52,24 +51,6 @@ class MediaUpdaterService
         $this->publicUploader  = $publicUploader;
         $this->typeRepository  = $typeRepository;
         $this->mediaRepository = $mediaRepository;
-    }
-
-    /**
-     * Define a trick slug
-     *
-     * @param Trick $trick
-     *
-     * @return self
-     */
-    public function defineTrick(Trick $trick): self
-    {
-        if (null === $trick->getSlug()) {
-            $trick->setSlug((new AsciiSlugger())->slug($trick->getTitle(), '-'));
-        }
-
-        $this->trick = $trick;
-
-        return $this;
     }
 
     /**
