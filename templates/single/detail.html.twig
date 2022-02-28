@@ -1,12 +1,22 @@
+{% if trick.user.media.values.0.path is defined %}
+	{% set avatar_path = trick.user.media.values.0.path %}
+{% else %}
+	{% if app.user.gender.gender == 'male' %}
+		{% set avatar_path = url('app_home') ~ 'img/male.jpg' %}
+	{% elseif app.user.gender.gender == 'female'%}
+		{% set avatar_path = url('app_home') ~ 'img/female.jpg' %}
+	{% endif %}
+{% endif %}
+
 <section clas="d-flex justify-content-center px-2">
 	<div class="container p-2 rounded bg-secondary text-light my-3">
 		<div>
-			<span class="fw-bold">Catégorie:</span>
+			<span class="fw-bold">Groupe:</span>
 			{{ trick.category.category }}</div>
 		<div class="my-5">{{ trick.content }}</div>
 		<div class="d-flex justify-content-between">
 			<div>
-				<img src="{{ trick.user.media.values.0.path }}" class="rounded-circle" alt="avatar" width="32" height="32">
+				<img src="{{ avatar_path }}" class="rounded-circle" alt="avatar" width="32" height="32">
 				{{ trick.user.firstName }}
 				{{ trick.user.lastName }}</div>
 			<div>

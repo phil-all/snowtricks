@@ -8,8 +8,8 @@ use App\Entity\Trick;
 use App\Service\Uploader;
 use App\Repository\TypeRepository;
 use App\Repository\MediaRepository;
+use Symfony\Component\Form\FormInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -54,37 +54,30 @@ class MediaUpdaterService
     }
 
     /**
-     * Define a trick slug
-     *
-     * @param Trick $trick
-     *
-     * @return self
-     */
-    public function defineTrick(Trick $trick): self
-    {
-        if (null === $trick->getSlug()) {
-            $trick->setSlug((new AsciiSlugger())->slug($trick->getTitle(), '-'));
-        }
-
-        $this->trick = $trick;
-
-        return $this;
-    }
-
-    /**
      * Update trick Medias from form datas
      *
-     * @param ArrayCollection $formImages
-     * @param ArrayCollection $formVideos
+     * @param Trick         $trick
+     * @param FormInterface $form
      *
      * @return void
      */
     public function updateMedias(
-        ?UploadedFile $formThumbnail,
-        ArrayCollection $formImages,
-        ArrayCollection $formVideos
+        Trick $trick,
+        FormInterface $form
     ): void {
-        $this->setThumbnail($formThumbnail)
+
+        /** @var UploadedFile $formThumbnail */
+        $formThumbnail = $form['thumbnail']->getData();
+
+        /** @var ArrayCollection $formImages */
+        $formImages = $form['images']->getData();
+
+        /** @var ArrayCollection $formVideos */
+        $formVideos = $form['videos']->getData();
+
+        $this
+            ->setTrick($trick)
+            ->setThumbnail($formThumbnail)
             ->deleteImagesAndVideos($formImages, $formVideos)
             ->setAdditionnalImages($formImages)
             ->setVideos($formVideos);
@@ -300,5 +293,19 @@ class MediaUpdaterService
         );
 
         return 'http://www.youtube.com/embed/' . $secondFilter;
+    }
+
+    /**
+     * Set trick value
+     *
+     * @param Trick $trick
+     *
+     * @return self
+     */
+    private function setTrick(Trick $trick): self
+    {
+        $this->trick = $trick;
+
+        return $this;
     }
 }

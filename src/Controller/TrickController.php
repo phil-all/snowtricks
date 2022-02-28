@@ -17,9 +17,7 @@ use App\Service\Entity\MediaUpdaterService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -135,18 +133,7 @@ class TrickController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $uploadedThumbnailFile */
-            $uploadedThumbnailFile = $form['thumbnail']->getData();
-
-            /** @var ArrayCollection $images */
-            $images = $form['images']->getData();
-
-            /** @var ArrayCollection $videos */
-            $videos = $form['videos']->getData();
-
-            $mediaUpdaterService
-                ->defineTrick($trick)
-                ->updateMedias($uploadedThumbnailFile, $images, $videos);
+            $mediaUpdaterService->updateMedias($trick, $form);
 
             $trickService->update($trick);
 

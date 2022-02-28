@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Trick;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
@@ -45,33 +44,4 @@ class TrickRepository extends ServiceEntityRepository
         $this->_em->remove($trick);
         $this->_em->flush();
     }
-
-    // /**
-    //  * @return Trick[] Returns an array of Trick objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Trick
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

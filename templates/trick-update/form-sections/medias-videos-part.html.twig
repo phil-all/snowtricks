@@ -1,8 +1,13 @@
-<div class="col-12 pb-3">
-	<p>Vidéos</p>
+<div class="col-12 pb-3 my-5">
+	<div class="col-12 d-flex mb-2">
+		<p class="m-0">Vidéos</p>
+		<div class="mx-2">
+			<button type="button" class="btn btn-primary btn-new btn-rounded" data-collection="#videos">+</button>
+		</div>
+	</div>
 	<div id="videos" class="row d-flex justify-content-center" data-prototype="{{ include('trick-form-prototypes/videos-prototype.html.twig', { form: form.videos.vars.prototype })|e('html_attr') }}" data-index="{{ form.videos|length > 0 ? form.videos|last.vars.name + 1 : 0 }}">
 		{% for video in form.videos %}
-			<div class="col-10 col-md-6 col-lg-4 col-xl-3 p-2 m-0 item h-100">
+			<div class="col-10 col-md-6 col-lg-4 col-xl-3 p-2 m-0 pt-0 item h-100">
 				<div class="bg-black h-100">
 					<div class="d-flex justify-content-end p-1">
 						<details class="text-white d-flex px-1">
@@ -25,5 +30,4 @@
 			</div>
 		{% endfor %}
 	</div>
-	<button type="button" class="btn btn-primary btn-new btn-rounded" data-collection="#videos">+</button>
 </div>

@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Status;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Status|null find($id, $lockMode = null, $lockVersion = null)
@@ -18,48 +18,4 @@ class StatusRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Status::class);
     }
-
-    /**
-     * Return Status with status field set on a given value
-     *
-     * @param string $value
-     * @return Status|null
-     */
-    public function findOneByStatus(string $value): ?Status
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.status = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
-    // /**
-    //  * @return Status[] Returns an array of Status objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Status
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

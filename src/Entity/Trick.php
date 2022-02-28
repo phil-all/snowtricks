@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\UserRepository;
 use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\Collection;
 use App\Service\Entity\MediaAccessorService;
@@ -171,28 +170,6 @@ class Trick
         return $this->comments;
     }
 
-    public function addComment(Comment $comment): self
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments[] = $comment;
-            $comment->setTrick($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): self
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getTrick() === $this) {
-                $comment->setTrick(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getCategory(): ?Category
     {
         return $this->category;
@@ -223,28 +200,6 @@ class Trick
     public function getMedia(): Collection
     {
         return $this->media;
-    }
-
-    public function addMedia(Media $media): self
-    {
-        if (!$this->media->contains($media)) {
-            $this->media[] = $media;
-            $media->setTrick($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMedia(Media $media): self
-    {
-        if ($this->media->removeElement($media)) {
-            // set the owning side to null (unless already changed)
-            if ($media->getTrick() === $this) {
-                $media->setTrick(null);
-            }
-        }
-
-        return $this;
     }
 
     /**
