@@ -135,20 +135,9 @@ class TrickController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $uploadedThumbnailFile */
-            $uploadedThumbnailFile = $form['thumbnail']->getData();
-
-            /** @var ArrayCollection $images */
-            $images = $form['images']->getData();
-
-            /** @var ArrayCollection $videos */
-            $videos = $form['videos']->getData();
-
-            $mediaUpdaterService
-                ->defineTrick($trick)
-                ->updateMedias($uploadedThumbnailFile, $images, $videos);
-
             $trickService->update($trick);
+
+            $mediaUpdaterService->updateMedias($trick, $form);
 
             return $this->redirectToRoute('app_home');
         }
