@@ -135,9 +135,9 @@ class TrickController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $trickService->update($trick);
-
             $mediaUpdaterService->updateMedias($trick, $form);
+
+            $trickService->update($trick);
 
             return $this->redirectToRoute('app_home');
         }
