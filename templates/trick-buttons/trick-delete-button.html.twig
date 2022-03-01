@@ -1,9 +1,9 @@
-<button type="button" class="btn btn-danger btn-rounded" data-bs-toggle="modal" data-bs-target="#deleteModal">
+<button type="button" class="btn btn-danger btn-rounded" data-bs-toggle="modal" data-bs-target="#deleteModal{{ trick.id }}">
 	<i class="bi bi-trash-fill"></i>
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteModal{{ trick.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content bg-primary">
 			<div class="modal-header">
