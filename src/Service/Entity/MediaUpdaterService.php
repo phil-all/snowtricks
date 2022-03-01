@@ -292,7 +292,7 @@ class MediaUpdaterService
             $firstFilter
         );
 
-        return 'http://www.youtube.com/embed/' . $secondFilter;
+        return 'https://www.youtube.com/embed/' . $secondFilter;
     }
 
     /**

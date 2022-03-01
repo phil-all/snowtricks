@@ -128,6 +128,6 @@ class MediaFixtures extends TrickFixtures implements DependentFixtureInterface
             8 => '4_Okz3_ycqE'
         ];
 
-        return 'http://www.youtube.com/embed/' . $uriList[rand(0, 8)];
+        return 'https://www.youtube.com/embed/' . $uriList[rand(0, 8)];
     }
 }
